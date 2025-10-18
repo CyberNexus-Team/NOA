@@ -37,7 +37,7 @@ The system is designed to run seamlessly on Docker, ensuring a simple, free, and
 *   **Pre-configured Workflow:** A ready-to-use n8n workflow allows you to start your analysis immediately.
 *   **Simple Web Interface:** Use the included Dockerized website to easily submit your search queries to the n8n backend.
 *   **Bring Your Own Key Model:** Simply register for free tiers on supported services and add your keys.
-*   **Automated Reporting:** Automatically generate and receive structured reports of your findings via Google Drive and Gmail.
+*   **Automated Reporting:** Automatically generate and receive structured reports in local on your PC 
 
 ---
 
