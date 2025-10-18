@@ -53,18 +53,17 @@ The system is designed to run seamlessly on Docker, ensuring a simple, free, and
 Follow these steps to get your own instance of NOA up and running.
 
 #### Prerequisites
-*   [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/) installed on your system.
-*   A Google account (for Google Drive & Gmail integration).
+*   [Docker Desktop]([https://www.docker.com/get-started](https://www.docker.com/products/docker-desktop/)) and [VScode](https://code.visualstudio.com/download) installed on your system.
 *   API keys from the services you intend to use.
 
 #### Installation
-1.  **Clone the repository:**
+1.  **Dowload the repository:**
     ```sh
     git clone https://github.com/CyberNexus-Team/NOA.git
     cd NOA
     ```
 
-2.  **Start the services using Docker Compose:**
+2.  **Open the folder with VScode, open the cmd terminal and start the services using Docker Compose:**
     ```sh
     docker-compose up -d
     ```
@@ -73,21 +72,21 @@ Follow these steps to get your own instance of NOA up and running.
 3.  **Set up n8n:**
     *   Open your browser and navigate.
     *   Set up your n8n owner account.
-    *   Import the provided workflow file (`workflow.json`) into n8n.
+    *   Import the provided workflow file into n8n.
 
 4.  **Configure API Keys & Credentials:**
     *   To get your API keys, we've compiled a list of direct registration links for all supported services. You can find it in our **[API_KEYS.md](API_KEYS.md)** document.
-    *   Once you have your keys, open the n8n interface, navigate to the "Credentials" section in the left sidebar, and add new credentials for each service (e.g., Shodan, Google, etc.).
+    *   Once you have your keys, open the NOA interface, navigate to the "API KEY" section in the top right bar, and add new API KEY for each service you use.
 
 ---
 
 ### Usage
 
 1.  Open the local web interface by navigating to `http://localhost:[PORTA_INTERFACCIA_WEB]`.
-2.  Enter your search query (e.g., a domain, an email, a username).
+2.  Select category, tool and enter your search query.
 3.  Submit the form. The interface will trigger the n8n workflow.
 4.  Wait for the process to complete.
-5.  Check your configured Google Drive folder and email inbox for the automatically generated report.
+5.  Check your local report folder and automatically generated report.
 
 ---
 
