@@ -58,10 +58,7 @@ Follow these steps to get your own instance of NOA up and running.
 
 #### Installation
 1.  **Dowload the repository:**
-    ```sh
-    git clone https://github.com/CyberNexus-Team/NOA.git
-    cd NOA
-    ```
+   
 
 2.  **Open the folder with VScode, open the cmd terminal and start the services using Docker Compose:**
     ```sh
