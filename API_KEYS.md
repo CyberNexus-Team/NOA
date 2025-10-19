@@ -942,18 +942,6 @@
 * **Description:** Technical specs by make/model/year.
 * **Sign-up:** [https://api-ninjas.com/api/cars](https://api-ninjas.com/api/cars)
 
-### carMakes (API Ninjas)
-
-* **Free queries:** 10,000/month
-* **Description:** Car manufacturers by year.
-* **Sign-up:** [https://api-ninjas.com/api/carmakes](https://api-ninjas.com/api/carmakes)
-
-### carModels (API Ninjas)
-
-* **Free queries:** 10,000/month
-* **Description:** Models by make/year.
-* **Sign-up:** [https://api-ninjas.com/api/carmodels](https://api-ninjas.com/api/carmodels)
-
 ### electricVehicle (API Ninjas)
 
 * **Free queries:** 10,000/month
