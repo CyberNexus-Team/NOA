@@ -63,6 +63,12 @@
 * **Description:** High-precision IP geolocation.
 * **Sign-up:** [https://www.bigdatacloud.com/](https://www.bigdatacloud.com/)
 
+### OpenCage
+
+* **Free queries:** 2,500/day
+* **Description:** Forward & reverse geocoding from multiple open sources.
+* **Sign-up:** [https://opencagedata.com/](https://opencagedata.com/)
+
 ---
 
 ## REPUTATION & THREAT INTEL — Abuse / OSINT
@@ -91,15 +97,6 @@
 * **Description:** Fraud prevention & reputation (IP/order/email).
 * **Sign-up:** [https://www.fraudlabspro.com/](https://www.fraudlabspro.com/)
 
----
-
-## GEOCODING — Coordinates & places
-
-### OpenCage
-
-* **Free queries:** 2,500/day
-* **Description:** Forward & reverse geocoding from multiple open sources.
-* **Sign-up:** [https://opencagedata.com/](https://opencagedata.com/)
 
 ---
 
@@ -703,12 +700,6 @@
 * **Description:** Search emails by name and domain.
 * **Sign-up:** [https://rapidapi.com/email-search16-email-search16-default/api/email-search16](https://rapidapi.com/email-search16-email-search16-default/api/email-search16)
 
-### BreachCheck API
-
-* **Free queries:** N/A (not in doc)
-* **Description:** Checks if email/username appears in public breaches.
-* **Sign-up:** N/A
-
 ### email verification (APILayer)
 
 * **Free queries:** 100/month
@@ -791,12 +782,6 @@
 * **Description:** Validates number format and country.
 * **Sign-up:** [https://rapidapi.com/dubois.jerome/api/phonenumbervalidatefree](https://rapidapi.com/dubois.jerome/api/phonenumbervalidatefree)
 
-### Free Phone Number Lookup and Validation API
-
-* **Free queries:** N/A (not in doc)
-* **Description:** Lookup/validation for phone numbers.
-* **Sign-up:** N/A
-
 ### Veriphone
 
 * **Free queries:** 1,000/month
@@ -854,12 +839,6 @@
 * **Free queries:** 100/month
 * **Description:** Search public posts by a business (e.g., Google Posts).
 * **Sign-up:** [https://rapidapi.com/serpapi/api/local-business-search](https://rapidapi.com/serpapi/api/local-business-search)
-
-### IBAN validation
-
-* **Free queries:** 100/month
-* **Description:** Formal IBAN validation.
-* **Sign-up:** [https://rapidapi.com/BigPapa/api/iban-validation1](https://rapidapi.com/BigPapa/api/iban-validation1)
 
 ### Open Corporates
 
@@ -930,6 +909,12 @@
 * **Free queries:** 10,000/month
 * **Description:** Bank details from SWIFT/BIC.
 * **Sign-up:** [https://api-ninjas.com/api/swiftcode](https://api-ninjas.com/api/swiftcode)
+
+### IBAN validation
+
+* **Free queries:** 100/month
+* **Description:** Formal IBAN validation.
+* **Sign-up:** [https://rapidapi.com/BigPapa/api/iban-validation1](https://rapidapi.com/BigPapa/api/iban-validation1)
 
 ---
 
