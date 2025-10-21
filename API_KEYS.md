@@ -7,7 +7,7 @@
 
 # WEBINT
 
-## IP GEOLOCATION — IP → location
+## IP GEOLOCATION — IP Services → location
 
 ### IPinfo
 
@@ -69,10 +69,6 @@
 * **Description:** Forward & reverse geocoding from multiple open sources.
 * **Sign-up:** [https://opencagedata.com/](https://opencagedata.com/)
 
----
-
-## REPUTATION & THREAT INTEL — Abuse / OSINT
-
 ### AbuseIPDB
 
 * **Free queries:** 1,000/day
@@ -100,7 +96,7 @@
 
 ---
 
-## DOMAIN & WHOIS — Domain profile
+## DOMAIN, WHOIS and DNS - Profile and records
 
 ### SecurityTrails
 
@@ -120,19 +116,11 @@
 * **Description:** Subdomains, backlinks, DNS & WHOIS aggregation.
 * **Sign-up:** [https://host.io/](https://host.io/)
 
----
-
-## DNS & INFRASTRUCTURE — Records & lookup
-
 ### DNS Lookup (APILayer)
 
 * **Free queries:** 100/month
 * **Description:** DNS queries (A/AAAA/MX/TXT/CNAME…).
 * **Sign-up:** [https://apilayer.com/marketplace/dns_lookup-api](https://apilayer.com/marketplace/dns_lookup-api)
-
----
-
-## COMPANY FROM DOMAIN — Enrichment
 
 ### Company Enrich
 
@@ -146,6 +134,12 @@
 * **Description:** Company email discovery & pattern search from domain.
 * **Sign-up:** [https://app.tomba.io/register](https://app.tomba.io/register)
 
+### Subdomain Scan
+
+* **Free queries:** 100/month
+* **Description:** Discovers subdomains for a given root domain.
+* **Sign-up:** RapidAPI (provider page)
+
 ---
 
 ## URL CONTENT (PARSING) — Extract content
@@ -158,7 +152,7 @@
 
 ---
 
-## ARCHIVE & SNAPSHOT — Page history
+## ARCHIVE & SNAPSHOT History & export
 
 ### Wayback Machine
 
@@ -172,9 +166,15 @@
 * **Description:** Instant page snapshot service.
 * **Sign-up:** Not required
 
+### Webpage To (PDF and PNG)
+
+* **Free queries:** 100/month
+* **Description:** Converts a URL to PNG or PDF.
+* **Sign-up:** RapidAPI (provider page)
+
 ---
 
-## URL SCAN & LOOKUP — Analysis & reputation
+## URL SCAN — Analysis & lookup
 
 ### urlscan.io
 
@@ -187,6 +187,18 @@
 * **Free queries:** 10,000/month
 * **Description:** URL info and basic reputation details.
 * **Sign-up:** [https://api-ninjas.com/api/urllookup](https://api-ninjas.com/api/urllookup)
+
+### Malicious-Scanner1
+
+* **Free queries:** 500/month
+* **Description:** URL malware/phishing analysis.
+* **Sign-up:** [https://rapidapi.com/sec-tools/api/malicious-scanner](https://rapidapi.com/sec-tools/api/malicious-scanner)
+
+### Domain DNS and Mail Security Checker
+
+* **Free queries:** 100/month
+* **Description:** Checks SPF, DKIM, DMARC and essential DNS records.
+* **Sign-up:** RapidAPI (provider page)
 
 ---
 
@@ -224,23 +236,7 @@
 
 ---
 
-## SECURITY — Website security
-
-### Malicious-Scanner1
-
-* **Free queries:** 500/month
-* **Description:** URL malware/phishing analysis.
-* **Sign-up:** [https://rapidapi.com/sec-tools/api/malicious-scanner](https://rapidapi.com/sec-tools/api/malicious-scanner)
-
-### Domain DNS and Mail Security Checker
-
-* **Free queries:** 100/month
-* **Description:** Checks SPF, DKIM, DMARC and essential DNS records.
-* **Sign-up:** RapidAPI (provider page)
-
----
-
-## EXTRACTION — Contacts & subdomains
+## EXTRACTION — Contacts
 
 ### Website Contacts Scraper1
 
@@ -252,22 +248,6 @@
 
 * **Free queries:** 100/month
 * **Description:** Finds emails & social links from a website.
-* **Sign-up:** RapidAPI (provider page)
-
-### Subdomain Scan
-
-* **Free queries:** 100/month
-* **Description:** Discovers subdomains for a given root domain.
-* **Sign-up:** RapidAPI (provider page)
-
----
-
-## SNAPSHOT — Snapshot & convert
-
-### Webpage To (PDF and PNG)
-
-* **Free queries:** 100/month
-* **Description:** Converts a URL to PNG or PDF.
 * **Sign-up:** RapidAPI (provider page)
 
 ---
@@ -290,7 +270,7 @@
 
 # GEOINT
 
-## AIR — Flight tools
+## AVIATION — Flight tools
 
 ### World Airports
 
@@ -328,7 +308,7 @@
 
 ---
 
-## JOB LISTINGS — Position search
+## JOB — Job search
 
 ### Real-Time Glassdoor Data
 
@@ -354,23 +334,13 @@
 
 ---
 
-## GEOLOCATION — Geocoding & distances
+## GEOLOCATION — Geocoding
 
 ### Geocode (geocode.xyz)
 
 * **Free queries:** 2,500/day
 * **Description:** Forward & reverse geocoding (address ⇄ lat/lon).
 * **Sign-up:** [https://geocode.xyz/api](https://geocode.xyz/api)
-
-### Geokeo
-
-* **Free queries:** 2,500/day
-* **Description:** Geocoding/reverse + map utilities (nearby, bbox, etc.).
-* **Sign-up:** [https://geokeo.com/pricing.php](https://geokeo.com/pricing.php)
-
----
-
-## IP & ZIP — IP geolocation and postal codes
 
 ### theipapi (IP Geolocation)
 
@@ -472,7 +442,7 @@
 * **Description:** Extract posts by location/user and metadata.
 * **Sign-up:** [https://rapidapi.com/DavidGelling/api/instagram-scraper-20251](https://rapidapi.com/DavidGelling/api/instagram-scraper-20251)
 
-### Instagram Scraper
+### Instagram User ID
 
 * **Free queries:** 10/day
 * **Description:** Get posts where a user is tagged.
@@ -513,12 +483,6 @@
 * **Free queries:** 100/month
 * **Description:** Data on Instagram audios/music and related IDs.
 * **Sign-up:** [https://rapidapi.com/mediacrawlers-mediacrawlers-default/api/instagram-api-fast-reliable-data-scraper](https://rapidapi.com/mediacrawlers-mediacrawlers-default/api/instagram-api-fast-reliable-data-scraper)
-
-### Instagram API Special
-
-* **Free queries:** 500/month
-* **Description:** Profile/post info via “special” endpoints.
-* **Sign-up:** [https://rapidapi.com/diyorbekkanal/api/instagram-api-special](https://rapidapi.com/diyorbekkanal/api/instagram-api-special)
 
 ### InstagramScraper2
 
@@ -578,19 +542,19 @@
 
 ## SNAPCHAT — Profile & scrape
 
-### Snapchat
+### Snapchat Username
 
 * **Free queries:** 100/month
 * **Description:** Retrieve public stories by username.
 * **Sign-up:** [https://rapidapi.com/datarise-datarise-default/api/snapchat6](https://rapidapi.com/datarise-datarise-default/api/snapchat6)
 
-### Snapchat1
+### Snapchat Scraper
 
 * **Free queries:** 30/month
 * **Description:** Spotlight highlights by username.
 * **Sign-up:** [https://rapidapi.com/socialminer/api/snapchat3](https://rapidapi.com/socialminer/api/snapchat3)
 
-### Snapchat Scraper1
+### Snapchat User
 
 * **Free queries:** 100/month
 * **Description:** Extract spotlight and profile info.
@@ -606,7 +570,7 @@
 * **Description:** Comments & post data from a post URL.
 * **Sign-up:** [https://rapidapi.com/socialminer/api/reddit34](https://rapidapi.com/socialminer/api/reddit34)
 
-### Reddit COM1
+### Reddit COM
 
 * **Free queries:** 100/month
 * **Description:** Subreddit stats/awards via ID.
