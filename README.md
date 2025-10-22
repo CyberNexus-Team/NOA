@@ -1,5 +1,3 @@
-
-
 <p align="center">
  
   <img src="https://github.com/CyberNexus-Team/CyberNexus-Team/blob/main/Logo%20Definitivo.png?raw=true" alt="NOA Logo" width="500"/>
@@ -34,6 +32,9 @@ The system is designed to run seamlessly on Docker, ensuring a simple, free, and
     *   **IMINT** (Imagery Intelligence)
     *   **SOCMINT** (Social Media Intelligence)
     *   **HUMINT** (Human Intelligence)
+    <p align="center">
+      <img src="https://github.com/CyberNexus-Team/NOA/blob/main/NOA-photo/noa-modules.png" alt="NOA Modules Overview" width="1000"/>
+    </p>
 *   **Pre-configured Workflow:** A ready-to-use n8n workflow allows you to start your analysis immediately.
 *   **Simple Web Interface:** Use the included Dockerized website to easily submit your search queries to the n8n backend.
 *   **Bring Your Own Key Model:** Simply register for free tiers on supported services and add your keys.
