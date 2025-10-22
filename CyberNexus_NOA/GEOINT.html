@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NOA — GEOINT</title>
+<style>
+  :root{
+    /* blue palette */
+    --bg:#07090c; --panel:#0f1218; --panel2:#0d1320;
+    --muted:#a9b4c7; --white:#fff;
+    --blue:#3b82f6; --cyan:#00c2ff; --ice:#e8f4ff;
+    --chip:#eaf7ff;
+    --accent:linear-gradient(135deg,var(--cyan),var(--blue));
+    --radius:18px; --ring:0 0 0 3px rgba(59,130,246,.25);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:
+      radial-gradient(900px 520px at 110% -10%, rgba(0,194,255,.10), transparent 60%),
+      radial-gradient(900px 520px at -10% 110%, rgba(59,130,246,.10), transparent 60%),
+      var(--bg);
+    color:var(--white);
+    font:15px/1.5 system-ui,Segoe UI,Roboto,Ubuntu,Arial
+  }
+
+  /* HEADER + NAV */
+  .header{position:sticky;top:0;z-index:10;backdrop-filter: blur(10px);
+    background:rgba(6,10,16,.6);border-bottom:1px solid rgba(255,255,255,.06)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;gap:16px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:42px;height:42px;border-radius:12px;background:var(--accent);
+    display:grid;place-items:center;color:#061018;font-weight:900;box-shadow:0 10px 26px rgba(0,162,255,.35)}
+  .title b{font-size:18px;letter-spacing:.4px}
+  .title .sub{font-size:12px;color:#a9b4c7}
+  .nav{display:flex;gap:10px;flex-wrap:wrap}
+  .nav a{
+    text-decoration:none;color:#061018;background:var(--ice);padding:8px 12px;border-radius:999px;
+    font-weight:900;font-size:12px;display:inline-flex;align-items:center;gap:6px;
+    box-shadow:0 6px 16px rgba(0,162,255,.18);transition:.15s}
+  .nav a:hover{transform:translateY(-1px)}
+  .nav .ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);box-shadow:none}
+  .nav .current{background:var(--accent);color:#061018}
+
+  /* LAYOUT */
+  .container{max-width:1200px;margin:24px auto;padding:0 18px 80px}
+  .grid{display:grid;gap:18px;grid-template-columns:260px 1fr}
+  .sidebar{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+           border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:12px}
+  .cat{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;cursor:pointer;
+       background:var(--panel);border:1px solid rgba(255,255,255,.08);margin-bottom:8px;transition:.18s}
+  .cat:hover{transform:translateY(-1px);border-color:rgba(0,194,255,.35)}
+  .cat.active{background:linear-gradient(180deg,rgba(0,194,255,.10),rgba(59,130,246,.08));box-shadow:0 10px 20px rgba(0,154,255,.18)}
+  .chip{font-size:11px;color:#0b2646;background:var(--chip);border-radius:999px;padding:6px 10px;font-weight:800}
+
+  /* CONTENT */
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);
+        border-radius:var(--radius);padding:16px}
+  .badge{font-size:12px;font-weight:800;color:#061018;background:var(--cyan);border-radius:999px;padding:4px 10px}
+  .card h2{margin:0 0 12px;display:flex;align-items:center;gap:10px}
+  .section{display:grid;gap:14px;grid-template-columns:1fr}
+  .tools{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+  .tool{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--panel);
+        border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:.18s}
+  .tool:hover{transform:translateY(-1px);border-color:rgba(0,194,255,.35)}
+  .tool input{appearance:none;width:18px;height:18px;border-radius:6px;border:1.5px solid rgba(255,255,255,.4);display:grid;place-items:center}
+  .tool input::after{content:"";width:12px;height:12px;border-radius:4px;background:transparent;transition:.18s}
+  .tool input:checked{border-color:transparent}
+  .tool input:checked::after{background:var(--accent)}
+  textarea{width:100%;min-height:150px;padding:12px;border-radius:12px;background:var(--panel2);
+           border:1px solid rgba(255,255,255,.1);color:#fff;outline:none;font-size:14px;resize:vertical}
+  textarea:focus{box-shadow:var(--ring);border-color:rgba(59,130,246,.45)}
+  /* Report bar */
+  .reportbar{display:flex;gap:12px;align-items:center;margin:6px 0 2px}
+  .reportbar input[type="text"]{flex:1;min-width:220px;padding:10px;border-radius:12px;
+    background:var(--panel2);border:1px solid rgba(255,255,255,.1);color:#fff}
+  .actions{display:flex;gap:10px;justify-content:flex-end}
+  .btn{border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.18s}
+  .btn.primary{color:#061018;background:var(--accent);box-shadow:0 8px 22px rgba(0,162,255,.35)}
+  .btn.ghost{color:#fff;background:transparent;border:1px solid rgba(255,255,255,.12)}
+  .toast{position:fixed;right:16px;bottom:16px;background:#0a0f15;border:1px solid rgba(255,255,255,.12);
+         padding:12px 14px;border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.45);max-width:360px}
+  .toast b{color:#b9fffd}.toast .err{color:#ff8a80}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">NOA</div>
+      <div class="title">
+        <b>n8n osint automation</b>
+        <div class="sub">GEOINT - Geospatial Intelligence</div>
+      </div>
+    </div>
+    <!-- Top NAV -->
+    <nav class="nav">
+      <a class="ghost" href="index.html">HOME</a>
+      <a class="ghost" href="webint.html">WEBINT</a>
+      <a class="ghost" href="socmint.html">SOCMINT</a>
+      <a class="ghost" href="imint.html">IMINT</a>
+      <a class="current" href="geoint.html">GEOINT</a>
+      <a class="ghost" href="humint.html">HUMINT</a>
+      <a href="apikey.html">API KEY</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="cat active" data-cat="AVIAZIONE"><span class="chip">AVIATION</span><span>Flight tools</span></div>
+      <div class="cat" data-cat="AUTOCOMPLETE"><span class="chip">AUTOCOMPLETE</span><span>Places & addresses</span></div>
+      <div class="cat" data-cat="OFFERTE_LAVORATIVE"><span class="chip">JOBS</span><span>Job search</span></div>
+      <div class="cat" data-cat="METEO_ARIA"><span class="chip">WEATHER & AIR</span><span>Air quality & weather</span></div>
+      <div class="cat" data-cat="GEOLOCALIZZAZIONE"><span class="chip">GEOLOCATION</span><span>Geocoding</span></div>
+    </aside>
+
+    <!-- Content -->
+    <section class="card">
+      <h2><span class="badge" id="catBadge">AVIATION</span> <span id="catTitle">Flight tools</span></h2>
+
+      <div class="section">
+        <div class="tools" id="toolsWrap"></div>
+
+        <!-- single input = body.data -->
+        <div>
+          <textarea id="dataInput" placeholder='Type the input for the selected tool.'></textarea>
+        </div>
+
+        <!-- Report bar -->
+        <div class="reportbar">
+          <input id="reportName" type="text" placeholder="Report name" />
+          <label style="display:flex;align-items:center;gap:8px">
+            <input type="checkbox" id="reportSave" checked>
+            <span>Save to /reports</span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn ghost" id="clearBtn">Clean</button>
+          <button class="btn primary" id="sendBtn">Run selected tool</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="toast" class="toast" style="display:none"></div>
+
+<script>
+  // === Webhook config ===
+  const WEBHOOK_BASE = "http://localhost:5679";
+  const WEBHOOK_PATH = "/webhook/cb23b1f4-e035-482c-b0e2-fa81355311eb";
+
+  // Categories -> tools (labels + exact actions)
+  const CATEGORIES = {
+    AVIAZIONE: [
+      { label: "World Airports",       action: "World Airports" },
+      { label: "IATA Airports",        action: "IATA Airports" },
+      { label: "Google Flights",       action: "Google Flights" },
+      { label: "Flights Fare Search",  action: "Flight Fare Search" }
+    ],
+    AUTOCOMPLETE: [
+      { label: "Google Maps Extractor", action: "Google Maps Extractor" }
+    ],
+    OFFERTE_LAVORATIVE: [
+      { label: "Real-Time Glassdoor Data", action: "Real-Time Glassdoor Data" }
+    ],
+    METEO_ARIA: [
+      { label: "weatherapi", action: "search_weatherapi" },
+      { label: "iqair",      action: "search_iqair" }
+    ],
+    GEOLOCALIZZAZIONE: [
+      { label: "geocode",        action: "search_geocode" },
+      { label: "theipapi",       action: "search_theipapi" },
+      { label: "zipcodestack",   action: "search_zipcodestack" }
+    ]
+  };
+
+  // Dynamic titles (EN only)
+  const badgeMap = {
+    AVIAZIONE:'AVIATION',
+    AUTOCOMPLETE:'AUTOCOMPLETE',
+    OFFERTE_LAVORATIVE:'JOBS',
+    METEO_ARIA:'WEATHER & AIR',
+    GEOLOCALIZZAZIONE:'GEOLOCATION'
+  };
+  const titleMap = {
+    AVIAZIONE:'Flight tools',
+    AUTOCOMPLETE:'Places & addresses',
+    OFFERTE_LAVORATIVE:'Job search',
+    METEO_ARIA:'Air quality & weather',
+    GEOLOCALIZZAZIONE:'Geocoding'
+  };
+
+  // Tool-specific placeholders (EN)
+  const TOOL_PLACEHOLDER = {
+    "World Airports": "Type an airport name, e.g.: Sing",
+    "IATA Airports": "Type an IATA airport code, e.g.: ORD",
+    "Google Flights": "From IATA, To IATA, Date (YYYY-MM-DD), e.g.: LAX, DXB, 2025-10-31",
+    "Flight Fare Search": "From IATA, To IATA, Date (YYYY-MM-DD), Passengers, e.g.: LAX, DXB, 2025-10-31, 2",
+    "Google Maps Extractor": "Type a partial place/address, e.g.: los ange",
+    "Real-Time Glassdoor Data": "Job title, location, e.g.: front end developer, new york",
+    "search_weatherapi": "City or coordinates (lat,lon), e.g.: Perugia  or  40.7,-74.0",
+    "search_iqair": "City, State/Region, Country, e.g.: Los Angeles, California, USA",
+    "search_geocode": "Address string, e.g.: Hauptstr., 57632 Berzhausen",
+    "search_theipapi": "IPv4 or IPv6, e.g.: 161.185.160.93",
+    "search_zipcodestack": "VAT number and postal code, e.g.: DE123456789, DE"
+  };
+
+  let currentCat = "AVIAZIONE";
+  renderCategory(currentCat);
+
+  // Sidebar: switch category
+  document.getElementById('sidebar').addEventListener('click', (e) => {
+    const item = e.target.closest('.cat');
+    if(!item) return;
+    [...document.querySelectorAll('.cat')].forEach(c => c.classList.remove('active'));
+    item.classList.add('active');
+    currentCat = item.dataset.cat;
+    renderCategory(currentCat);
+  });
+
+  function renderCategory(cat){
+    // Titles
+    document.getElementById('catBadge').textContent = badgeMap[cat] || cat;
+    document.getElementById('catTitle').textContent = titleMap[cat] || '';
+
+    // Tools
+    const wrap = document.getElementById('toolsWrap');
+    wrap.innerHTML = '';
+
+    (CATEGORIES[cat] || []).forEach(({label, action}, idx) => {
+      const id = slug(action) + "-" + idx;
+      const div = document.createElement('div');
+      div.className = 'tool';
+      div.innerHTML = `
+        <input type="checkbox" id="${id}" data-action="${escapeHTML(action)}" data-label="${escapeHTML(label)}">
+        <label for="${id}" style="cursor:pointer">${label}</label>`;
+      wrap.appendChild(div);
+    });
+
+    // Enforce single selection + dynamic placeholder
+    wrap.querySelectorAll('input[type=checkbox]').forEach(cb => {
+      cb.addEventListener('change', (ev) => {
+        if (cb.checked) {
+          // uncheck all others
+          wrap.querySelectorAll('input[type=checkbox]').forEach(other => {
+            if (other !== cb) other.checked = false;
+          });
+          // set tool-specific placeholder
+          const action = cb.dataset.action;
+          const label  = cb.dataset.label;
+          const ph = TOOL_PLACEHOLDER[action] || TOOL_PLACEHOLDER[label] || 'Type the input for the selected tool.';
+          setPlaceholder(ph);
+        } else {
+          // if none selected -> category generic placeholder
+          if (![...wrap.querySelectorAll('input[type=checkbox]')].some(x=>x.checked)) {
+            setPlaceholder('Type the input for the selected tool.');
+          }
+        }
+      });
+    });
+
+    // Reset textarea on category change
+    setPlaceholder('Type the input for the selected tool.');
+    document.getElementById('dataInput').value = '';
+  }
+
+  function setPlaceholder(text){
+    const ta = document.getElementById('dataInput');
+    ta.placeholder = text;
+  }
+
+  function slug(s){ return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+  function escapeHTML(s){ return String(s).replace(/[&<>'"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m])); }
+
+  // Buttons
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    const wrap = document.getElementById('toolsWrap');
+    wrap.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked=false);
+    document.getElementById('dataInput').value='';
+    setPlaceholder('Type the input for the selected tool.');
+  });
+
+  document.getElementById('sendBtn').addEventListener('click', async () => {
+    const checked = [...document.querySelectorAll('#toolsWrap input[type=checkbox]:checked')];
+    if(checked.length === 0) return toast('Select one tool.');
+    // single selection enforced, but safeguard:
+    const action = checked[0].dataset.action;
+
+    const raw = document.getElementById('dataInput').value.trim();
+    if(!raw) return toast('Enter a value in the field.');
+
+    // meta (local save)
+    const meta = {
+      save: document.getElementById('reportSave')?.checked === true,
+      name: (document.getElementById('reportName')?.value || '').trim() || null
+    };
+
+    try{
+      await send(action, raw, meta);
+      toast(`<b>OK</b>: available result of 1 tool (GEOINT).`);
+    }catch(e){
+      toast(`<span class="err">Error</span>: ${escapeHTML(e.message||String(e))}`);
+    }
+  });
+
+  async function send(action, raw, meta){
+    const url = WEBHOOK_BASE + WEBHOOK_PATH;
+    let data; try { data = JSON.parse(raw); } catch { data = raw; }
+    try{
+      const res = await fetch(url, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ action, data, meta, section: 'GEOINT' })
+      });
+      if(!res.ok && res.status !== 0){
+        const t = await res.text().catch(()=> '');
+        throw new Error(`HTTP ${res.status} ${t || ''}`.trim());
+      }
+    }catch(err){
+      const msg = String(err && (err.message || err));
+      if (msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror')){
+        return; // silent fire-and-forget
+      }
+      throw err;
+    }
+  }
+
+  // Toast
+  const toastEl = document.getElementById('toast'); let hideTimer;
+  function toast(html){
+    toastEl.innerHTML = html;
+    toastEl.style.display = 'block';
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=> toastEl.style.display='none', 4000);
+  }
+</script>
+</body>
+</html>

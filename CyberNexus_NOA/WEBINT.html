@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NOA — WEBINT</title>
+<style>
+  :root{
+    /* PALETTE VERDE */
+    --bg:#08100b;
+    --panel:#0f1a13;
+    --panel2:#132217;
+    --muted:#cfe3d6;
+    --white:#fff;
+
+    --green:#16a34a;
+    --green-soft:#34d399;
+    --chip:#eafff2;
+    --chipText:#0b3a23;
+    --accent:linear-gradient(135deg,var(--green-soft),var(--green));
+
+    --radius:18px;
+    --ring:0 0 0 3px rgba(52,211,153,.30);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:
+      radial-gradient(900px 520px at 110% -10%, rgba(52,211,153,.12), transparent 60%),
+      radial-gradient(900px 520px at -10% 110%, rgba(22,163,74,.12), transparent 60%),
+      var(--bg);
+    color:var(--white);
+    font:15px/1.5 system-ui, Segoe UI, Roboto, Ubuntu, Arial
+  }
+
+  /* HEADER + NAV */
+  .header{position:sticky;top:0;z-index:10;backdrop-filter: blur(10px);
+    background:rgba(8,16,11,.65);border-bottom:1px solid rgba(255,255,255,.06)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;gap:16px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:42px;height:42px;border-radius:12px;background:var(--accent);
+    display:grid;place-items:center;color:#07140b;font-weight:900;box-shadow:0 10px 26px rgba(52,211,153,.28)}
+  .title b{font-size:18px;letter-spacing:.4px}
+  .title .sub{font-size:12px;color:var(--muted)}
+  .nav{display:flex;gap:10px;flex-wrap:wrap}
+  .nav a{
+    text-decoration:none;color:#062313;background:#eefdf5;padding:8px 12px;border-radius:999px;
+    font-weight:900;font-size:12px;display:inline-flex;align-items:center;gap:6px;
+    box-shadow:0 6px 16px rgba(22,163,74,.18);transition:.15s}
+  .nav a:hover{transform:translateY(-1px)}
+  .nav .ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);box-shadow:none}
+  .nav .current{background:var(--accent);color:#062313}
+
+  /* LAYOUT */
+  .container{max-width:1200px;margin:24px auto;padding:0 18px 80px}
+  .grid{display:grid;gap:18px;grid-template-columns:260px 1fr}
+  .sidebar{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+           border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:12px}
+  .cat{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;cursor:pointer;
+       background:var(--panel);border:1px solid rgba(255,255,255,.08);margin-bottom:8px;transition:.18s}
+  .cat:hover{transform:translateY(-1px);border-color:rgba(52,211,153,.45)}
+  .cat.active{background:linear-gradient(180deg,rgba(52,211,153,.10),rgba(22,163,74,.10));box-shadow:0 10px 22px rgba(22,163,74,.22)}
+  .chip{font-size:11px;color:var(--chipText);background:var(--chip);border-radius:999px;padding:6px 10px;font-weight:800}
+
+  /* CONTENT */
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);
+        border-radius:var(--radius);padding:16px}
+  .badge{font-size:12px;font-weight:800;color:#062313;background:var(--green-soft);border-radius:999px;padding:4px 10px}
+  .card h2{margin:0 0 12px;display:flex;align-items:center;gap:10px}
+  .section{display:grid;gap:14px;grid-template-columns:1fr}
+  .tools{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+  .tool{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;background:var(--panel);
+        border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:.18s}
+  .tool:hover{transform:translateY(-1px);border-color:rgba(52,211,153,.45)}
+  .tool input{appearance:none;width:18px;height:18px;border-radius:6px;border:1.5px solid rgba(255,255,255,.4);display:grid;place-items:center}
+  .tool input::after{content:"";width:12px;height:12px;border-radius:4px;background:transparent;transition:.18s}
+  .tool input:checked{border-color:transparent}
+  .tool input:checked::after{background:var(--accent)}
+  textarea{width:100%;min-height:110px;padding:12px;border-radius:12px;background:var(--panel2);
+           border:1px solid rgba(255,255,255,.1);color:#fff;outline:none;font-size:14px;resize:vertical}
+  textarea:focus{box-shadow:var(--ring);border-color:rgba(52,211,153,.55)}
+
+  /* Report bar */
+  .reportbar{display:flex;gap:12px;align-items:center;margin:6px 0 2px}
+  .reportbar input{flex:1;min-width:220px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);
+                   background:var(--panel2);color:#fff}
+
+  .actions{display:flex;gap:10px;justify-content:flex-end}
+  .btn{border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.18s}
+  .btn.primary{color:#08140c;background:var(--accent);box-shadow:0 8px 22px rgba(22,163,74,.35)}
+  .btn.ghost{color:#fff;background:transparent;border:1px solid rgba(255,255,255,.12)}
+  .toast{position:fixed;right:16px;bottom:16px;background:#0d1812;border:1px solid rgba(255,255,255,.12);
+         padding:12px 14px;border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.45);max-width:360px}
+  .toast b{color:#d9ffe8}.toast .err{color:#ffb1b1}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">NOA</div>
+      <div class="title">
+        <b>n8n osint automation</b>
+        <div class="sub">WEBINT - Web Intelligence</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="ghost" href="index.html">HOME</a>
+      <a class="current" href="webint.html">WEBINT</a>
+      <a class="ghost" href="socmint.html">SOCMINT</a>
+      <a class="ghost" href="imint.html">IMINT</a>
+      <a class="ghost" href="geoint.html">GEOINT</a>
+      <a class="ghost" href="humint.html">HUMINT</a>
+      <a href="apikey.html">API KEY</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Sezioni -->
+      <div class="cat active" data-cat="GEOIP"><span class="chip">IP GEOLOCATION</span><span>IP Services → location</span></div>
+      <div class="cat" data-cat="DOMAIN_DNS"><span class="chip">DOMAIN, WHOIS and DNS</span><span>Profile and records</span></div>
+      <div class="cat" data-cat="URL_SCAN"><span class="chip">URL SCAN</span><span>Analysis & lookup</span></div>
+      <div class="cat" data-cat="URL_CONTENT"><span class="chip">URL PARSING</span><span>Extract content</span></div>
+      <div class="cat" data-cat="CONTACTS"><span class="chip">EXTRACTION</span><span>Contacts</span></div>
+      <div class="cat" data-cat="ARCHIVE_SNAPSHOT"><span class="chip">ARCHIVE & SNAPSHOT</span><span>History & export</span></div>
+      <div class="cat" data-cat="MALWARE_INTEL"><span class="chip">MALWARE</span><span>Malware Intelligence</span></div>
+      <div class="cat" data-cat="NEWS_GENERAL"><span class="chip">NEWS — ARTICLES</span><span>Keyword search</span></div>
+    </aside>
+
+    <!-- Content -->
+    <section class="card">
+      <h2><span class="badge" id="catBadge">GEOLOCALIZZAZIONE IP</span> <span id="catTitle">Servizi IP → luogo</span></h2>
+
+      <div class="section">
+        <div class="tools" id="toolsWrap"></div>
+
+        <!-- unico input = body.data -->
+        <div>
+          <textarea id="dataInput" placeholder="8.8.8.8"></textarea>
+        </div>
+
+        <!-- Report bar -->
+        <div class="reportbar">
+          <input id="reportName" placeholder="Report name" />
+          <label style="display:flex;align-items:center;gap:8px">
+            <input type="checkbox" id="reportSave" checked>
+            <span>Save to /reports</span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button class="btn ghost" id="clearBtn">Clean</button>
+          <button class="btn primary" id="sendBtn">Run selected tool</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="toast" class="toast" style="display:none"></div>
+
+<script>
+  // === Config invio ===
+  const WEBHOOK_BASE = "http://localhost:5679";
+  const WEBHOOK_PATH = "/webhook/cb23b1f4-e035-482c-b0e2-fa81355311eb";
+
+  // Categorie + tool
+  const CATEGORIES = {
+    /* ===== GEOLOCALIZZAZIONE IP ===== */
+    GEOIP: [
+      { label: "IPinfo",                action: "search_ipinfo" },
+      { label: "IPStack",               action: "search_ipstack" },
+      { label: "IPapi",                 action: "search_ipapi" },
+      { label: "ip2location",           action: "search_ip2location" },
+      { label: "ipgeolocation",         action: "search_ipgeolocation" },
+      { label: "iplocate",              action: "search_iplocate" },
+      { label: "iplookup",              action: "search_iplookup" },
+      { label: "ipquery",               action: "ipquery" },
+      { label: "bdc_ip",                action: "search_bdc_ip" },
+      { label: "opencage",              action: "search_opencage" },
+      { label: "AbuseIPDB",             action: "search_abuseipdb" },
+      { label: "GreyNoise",             action: "search_greynoise" },
+      { label: "FraudLabs Pro",         action: "screen_fraudlabspro" },
+      { label: "AlienVault OTX",        action: "search_alienvault" }
+    ],
+
+    /* ===== DOMINIO, WHOIS e DNS ===== */
+    DOMAIN_DNS: [
+      { label: "SecurityTrails",        action: "search_securitytrails" },
+      { label: "WHOIS",                 action: "search_whois" },
+      { label: "Host.io",               action: "search_hostio" },
+      { label: "DNS Lookup",            action: "search_dnslookup" },
+      { label: "Company Enrich",        action: "search_companyenrich" },
+      { label: "Tomba",                 action: "search_tomba" },
+      { label: "Subdomani Scan",        action: "Subdomain Scan" }
+    ],
+
+    /* ===== URL SCAN ===== */
+    URL_SCAN: [
+      { label: "Malicious-Scanner",                     action: "Malicious-Scanner1" },
+      { label: "Domain DNS and Mail Security Checker",  action: "Domain DNS and Mail Security Checker" },
+      { label: "urlscan.io",                            action: "urlscan" },
+      { label: "URL Lookup",                            action: "search_urllookup" }
+    ],
+
+    /* ===== CONTENUTO URL (PARSING) ===== */
+    URL_CONTENT: [
+      { label: "URL → Markdown",         action: "URLtomarkdown" }
+    ],
+
+    /* ===== ESTRAZIONE Contatti ===== */
+    CONTACTS: [
+      { label: "Website Contacts Scraper",                          action: "Website Contacts Scraper1" },
+      { label: "Website Emails & Social Media Pages Link Extractor", action: "Website Emails & Social Media Pages Link Extractor" }
+    ],
+
+    /* ===== ARCHIVIO & SNAPSHOT ===== */
+    ARCHIVE_SNAPSHOT: [
+      { label: "Webpage To (PDF and PNG)", action: "Webpage To (PDF and PNG)" },
+      { label: "wayback",                  action: "wayback" },
+      { label: "Webarchive",               action: "search_webarchive" }
+    ],
+
+    /* ===== MALWARE ===== */
+    MALWARE_INTEL: [
+      { label: "Malshare",   action: "malshare" },
+      { label: "VirusTotal", action: "virustotal" }
+    ],
+
+    /* ===== NOTIZIE — GENERALI ===== */
+    NEWS_GENERAL: [
+      { label: "GNews",        action: "gnews" },
+      { label: "NewsAPI",      action: "newsapi" },
+      { label: "NewsData",     action: "newsdata" },
+      { label: "WorldNewsAPI", action: "worldnewsapi" },
+      { label: "TheNewsAPI",   action: "thenewsapi" }
+    ]
+  };
+
+  // Placeholder di default per categoria (fallback)
+  const PLACEHOLDERS = {
+    GEOIP: "8.8.8.8",
+    DOMAIN_DNS: "example.it",
+    URL_SCAN: "https://www.example.it/",
+    URL_CONTENT: "https://www.example.it/",
+    CONTACTS: "https://www.example.it/",
+    ARCHIVE_SNAPSHOT: "https://www.example.it/",
+    MALWARE_INTEL: "Inserisci hash / URL / indicatore richiesto dal servizio.",
+    NEWS_GENERAL: "cybersecurity"
+  };
+
+  // Placeholder specifici per TOOL (mappati per action)
+  const TOOL_PLACEHOLDERS = {
+    // GEOIP
+    "search_ipinfo": "8.8.8.8",
+    "search_ipstack": "8.8.8.8",
+    "search_ipapi": "8.8.8.8",
+    "search_ip2location": "8.8.8.8",
+    "search_ipgeolocation": "8.8.8.8",
+    "search_iplocate": "8.8.8.8",
+    "search_iplookup": "8.8.8.8",
+    "ipquery": "8.8.8.8",
+    "search_bdc_ip": "8.8.8.8",
+    "search_opencage": "8.8.8.8",
+    "search_abuseipdb": "8.8.8.8",
+    "search_greynoise": "8.8.8.8",
+    "screen_fraudlabspro": "8.8.8.8",
+    "search_alienvault": "8.8.8.8",
+
+    // DOMINIO, WHOIS e DNS
+    "search_securitytrails": "example.it",
+    "search_whois": "www.example.com (solo .com)",
+    "search_hostio": "example.it",
+    "search_dnslookup": "example.it",
+    "search_companyenrich": "example.it",
+    "search_tomba": "example.it",
+    "Subdomain Scan": "example.it",
+
+    // URL SCAN
+    "Malicious-Scanner1": "https://www.example.it/",
+    "Domain DNS and Mail Security Checker": "https://www.example.it/",
+    "urlscan": "https://www.example.it/",
+    "search_urllookup": "https://www.example.it/",
+
+    // CONTENUTO
+    "URLtomarkdown": "https://www.example.it/",
+
+    // ESTRAZIONE
+    "Website Contacts Scraper1": "https://www.example.it/",
+    "Website Emails & Social Media Pages Link Extractor": "www.example.it",
+
+    // ARCHIVIO & SNAPSHOT
+    "Webpage To (PDF and PNG)": "https://github.com/CyberNexus-Team/NOA",
+    "wayback": "https://www.example.it/",
+    "search_webarchive": "https://www.example.it/, 10.10.2025",
+
+    // MALWARE
+    "malshare": "sha256 / md5 / url",
+    "virustotal": "sha256 / md5 / url",
+
+    // NEWS
+    "gnews": "cybersecurity",
+    "newsapi": "cybersecurity",
+    "newsdata": "cybersecurity",
+    "worldnewsapi": "cybersecurity",
+    "thenewsapi": "cybersecurity"
+  };
+
+  let currentCat = "GEOIP";
+  renderCategory(currentCat);
+
+  // Sidebar click
+  document.getElementById('sidebar').addEventListener('click', (e) => {
+    const item = e.target.closest('.cat');
+    if(!item) return;
+    [...document.querySelectorAll('.cat')].forEach(c => c.classList.remove('active'));
+    item.classList.add('active');
+    currentCat = item.dataset.cat;
+    renderCategory(currentCat);
+  });
+
+  function renderCategory(cat){
+    const badgeMap = {
+      GEOIP:'IP GEOLOCATION',
+      DOMAIN_DNS:'DOMAIN, WHOIS and DNS',
+      URL_SCAN:'URL SCAN',
+      URL_CONTENT:'URL PARSING',
+      CONTACTS:'EXTRACTION',
+      ARCHIVE_SNAPSHOT:'ARCHIVE & SNAPSHOT',
+      MALWARE_INTEL:'MALWARE',
+      NEWS_GENERAL:'NEWS — ARTICLES'
+    };
+    const titleMap = {
+      GEOIP:'IP Services → location',
+      DOMAIN_DNS:'Profile and records',
+      URL_SCAN:'Analysis & lookup',
+      URL_CONTENT:'Extract content',
+      CONTACTS:'Contact',
+      ARCHIVE_SNAPSHOT:'History & export',
+      MALWARE_INTEL:'Malware Intelligence',
+      NEWS_GENERAL:'Keyword search'
+    };
+    document.getElementById('catBadge').textContent = badgeMap[cat] || cat;
+    document.getElementById('catTitle').textContent = titleMap[cat] || '';
+
+    const wrap = document.getElementById('toolsWrap');
+    wrap.innerHTML = '';
+    (CATEGORIES[cat] || []).forEach(({label, action}) => {
+      const id = slug(action);
+      const div = document.createElement('div');
+      div.className = 'tool';
+      div.innerHTML = `
+        <input type="checkbox" id="${id}" data-action="${escapeHTML(action)}">
+        <label for="${id}" style="cursor:pointer">${label}</label>`;
+      wrap.appendChild(div);
+    });
+
+    // placeholder di default per la categoria
+    const ta = document.getElementById('dataInput');
+    ta.value='';
+    ta.placeholder = PLACEHOLDERS[cat] || 'Inserisci il dato da inviare (stringa o JSON)';
+
+    // SELEZIONE SINGOLA: quando selezioni un tool, deseleziona gli altri
+    wrap.onchange = (e)=>{
+      const t = e.target;
+      if(t && t.matches('input[type=checkbox]')){
+        if(t.checked){
+          [...wrap.querySelectorAll('input[type=checkbox]')].forEach(cb => { if(cb!==t) cb.checked = false; });
+        }
+        updatePlaceholder();
+      }
+    };
+  }
+
+  function updatePlaceholder(){
+    const selected = [...document.querySelectorAll('#toolsWrap input[type=checkbox]:checked')];
+    const ta = document.getElementById('dataInput');
+    if(selected.length === 1){
+      const action = selected[0].dataset.action;
+      ta.placeholder = TOOL_PLACEHOLDERS[action] || PLACEHOLDERS[currentCat] || ta.placeholder;
+    }else if(selected.length === 0){
+      ta.placeholder = PLACEHOLDERS[currentCat] || ta.placeholder;
+    }else{
+      ta.placeholder = PLACEHOLDERS[currentCat] || 'Inserisci il dato richiesto.';
+    }
+  }
+
+  function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-'); }
+  function escapeHTML(s){ return s.replace(/[&<>'"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m])); }
+
+  // Pulsanti
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    document.getElementById('dataInput').value='';
+    document.querySelectorAll('#toolsWrap input[type=checkbox]').forEach(cb => cb.checked=false);
+    document.getElementById('dataInput').placeholder = PLACEHOLDERS[currentCat] || '';
+  });
+
+  document.getElementById('sendBtn').addEventListener('click', async () => {
+    const selectedEls = [...document.querySelectorAll('#toolsWrap input[type=checkbox]:checked')];
+    if(selectedEls.length !== 1) return toast('Select at least one tool.');
+    const action = selectedEls[0].dataset.action;
+
+    const raw = document.getElementById('dataInput').value.trim();
+    if(!raw) return toast('Enter a value in the field.');
+
+    let data; try { data = JSON.parse(raw); } catch { data = raw; }
+
+    // meta per salvataggio locale
+    const meta = {
+      save: document.getElementById('reportSave')?.checked === true,
+      name: (document.getElementById('reportName')?.value || '').trim() || null
+    };
+
+    try{
+      await send(action, data, meta);
+      toast(`<b>OK</b>: available result of 1 tool (WEBINT).`);
+    }catch(e){
+      toast(`<span class="err">Errore</span>: ${escapeHTML(e.message||String(e))}`);
+    }
+  });
+
+  // Invio con gestione “anti-falso-errore”
+  async function send(action, data, meta){
+    const url = WEBHOOK_BASE + WEBHOOK_PATH;
+    try{
+      const res = await fetch(url, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ action, data, meta, section: 'WEBINT' })
+      });
+      if(!res.ok && res.status !== 0){
+        const t = await res.text().catch(()=> '');
+        throw new Error(`HTTP ${res.status} ${t || ''}`.trim());
+      }
+    }catch(err){
+      const msg = String(err && (err.message || err));
+      if (msg.toLowerCase().includes('failed to fetch') || msg.toLowerCase().includes('networkerror')) {
+        return; // silenzioso: workflow probabilmente già attivo
+      }
+      throw err; // altri errori reali
+    }
+  }
+
+  // Toast
+  const toastEl = document.getElementById('toast'); let hideTimer;
+  function toast(html){
+    toastEl.innerHTML = html;
+    toastEl.style.display = 'block';
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=> toastEl.style.display='none', 4200);
+  }
+</script>
+</body>
+</html>

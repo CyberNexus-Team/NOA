@@ -1,0 +1,141 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: noa_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: noa
+      MYSQL_DATABASE: noa_secrets
+      MYSQL_USER: noa
+      MYSQL_PASSWORD: noa
+      TZ: Europe/Rome
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci"
+    ]
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - noa-network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  db-migrate:
+    image: mysql:8.0
+    container_name: noa_db-migrate
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_NAME: noa_secrets
+      DB_USER: noa
+      DB_PASSWORD: noa
+    volumes:
+      - ./migrations:/migrations:ro
+    command: >
+      sh -c "
+        echo 'Waiting for MySQL...' &&
+        until mysqladmin ping -hmysql -u$$DB_USER -p$$DB_PASSWORD --silent; do sleep 1; done &&
+        echo 'Applying migrations with app user...' &&
+        mysql -hmysql -u$$DB_USER -p$$DB_PASSWORD $$DB_NAME -e 'source /migrations/001-init.sql;' &&
+        echo 'Migrations applied.'"
+    networks:
+      - noa-network
+    restart: "no"
+
+  n8n:
+    image: n8nio/n8n:1.110.1
+    container_name: n8n_interfaccia
+    restart: unless-stopped
+    ports:
+      - "5678:5678"                   # UI n8n su http://localhost:5678
+    environment:
+      TZ: Europe/Rome
+      N8N_HOST: "localhost"
+      N8N_PORT: 5678
+      N8N_PROTOCOL: "http"
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - n8n_local_files:/files
+      - ./NOA/reports:/data/reports
+    depends_on:
+      mysql:
+        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
+    networks:
+      - noa-network
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    container_name: noa-gotenberg
+    restart: unless-stopped
+    ports:
+      - "3000:3000"           # opzionale per debug dal browser
+    networks:
+      - noa-network
+
+  html2docx:
+    build:
+      context: ./html2docx
+      dockerfile: Dockerfile
+    container_name: noa_html2docx
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Rome
+      ADD_PORT: "5005"
+    ports:
+      - "5005:5005"           # API disponibile su http://localhost:5005
+    networks:
+      - noa-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5005/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  nginx:
+    image: nginx:alpine
+    container_name: noa_nginx
+    restart: unless-stopped
+    ports:
+      - "5679:80"                      # proxy CORS per i webhook
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - n8n
+    networks:
+      - noa-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  adminer:
+    image: adminer:latest
+    container_name: noa_adminer
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+      TZ: Europe/Rome
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - noa-network
+
+volumes:
+  n8n_data:
+  n8n_local_files:
+  mysql_data:
+
+networks:
+  noa-network:
+    driver: bridge

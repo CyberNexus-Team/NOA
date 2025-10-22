@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NOA — API KEY</title>
+<style>
+  :root{
+    /* Palette di base (WEBINT – verde) */
+    --bg:#08100b; --panel:#0f1a13; --panel2:#132217; --muted:#cfe3d6; --white:#fff;
+    --main:#16a34a; --soft:#34d399; --chip:#eefdf5; --chipText:#062313;
+    /* RGB (usati per alpha dinamiche; verranno aggiornati via JS) */
+    --bg-rgb: 8,16,11;
+    --main-rgb: 22,163,74;
+    --soft-rgb: 52,211,153;
+
+    --accent:linear-gradient(135deg,var(--soft),var(--main));
+    --radius:18px; --ring:0 0 0 3px rgba(52,211,153,.30);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:
+      radial-gradient(900px 520px at 110% -10%, rgba(var(--soft-rgb), .12), transparent 60%),
+      radial-gradient(900px 520px at -10% 110%, rgba(var(--main-rgb), .12), transparent 60%),
+      var(--bg);
+    color:var(--white);
+    font:15px/1.5 system-ui, Segoe UI, Roboto, Ubuntu, Arial
+  }
+  .header{position:sticky;top:0;z-index:10;backdrop-filter: blur(10px);
+    background:rgba(var(--bg-rgb), .65);border-bottom:1px solid rgba(255,255,255,.06)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;gap:16px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:42px;height:42px;border-radius:12px;background:var(--accent);
+    display:grid;place-items:center;color:#07140b;font-weight:900;box-shadow:0 10px 26px rgba(var(--main-rgb), .28)}
+  .title b{font-size:18px;letter-spacing:.4px}
+  .title .sub{font-size:12px;color:var(--muted)}
+  .nav{display:flex;gap:10px;flex-wrap:wrap}
+  .nav a{
+    text-decoration:none;color:var(--chipText);background:var(--chip);padding:8px 12px;border-radius:999px;
+    font-weight:900;font-size:12px;display:inline-flex;align-items:center;gap:6px;
+    box-shadow:0 6px 16px rgba(var(--main-rgb), .18);transition:.15s}
+  .nav a:hover{transform:translateY(-1px)}
+  .nav .ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);box-shadow:none}
+  .nav .current{background:var(--accent);color:#062313}
+
+  .container{max-width:1200px;margin:24px auto;padding:0 18px 80px}
+  .grid{display:grid;gap:18px;grid-template-columns:260px 1fr}
+  .sidebar{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+           border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:12px}
+  .cat{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;cursor:pointer;
+       background:var(--panel);border:1px solid rgba(255,255,255,.08);margin-bottom:8px;transition:.18s}
+  .cat:hover{transform:translateY(-1px);border-color:rgba(var(--main-rgb), .45)}
+  .cat.active{
+    background:linear-gradient(180deg, rgba(var(--soft-rgb), .10), rgba(var(--main-rgb), .10));
+    box-shadow:0 10px 22px rgba(var(--main-rgb), .22)
+  }
+  .chip{font-size:11px;color:var(--chipText);background:var(--chip);border-radius:999px;padding:6px 10px;font-weight:800}
+
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.08);
+        border-radius:var(--radius);padding:16px}
+  .badge{font-size:12px;font-weight:800;color:#062313;background:var(--soft);border-radius:999px;padding:4px 10px}
+  .card h2{margin:0 0 12px;display:flex;align-items:center;gap:10px}
+  .section{display:grid;gap:18px;grid-template-columns:1fr}
+  .form{display:grid;gap:12px;grid-template-columns:1fr}
+  .row{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+  select, input{
+    width:100%;padding:12px;border-radius:12px;background:var(--panel2);
+    border:1px solid rgba(255,255,255,.1);color:#fff;outline:none;font-size:14px
+  }
+  select:focus, input:focus{box-shadow:var(--ring);border-color:rgba(var(--main-rgb), .55)}
+  .actions{display:flex;gap:10px;justify-content:flex-end}
+  .btn{border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.18s}
+  .btn.primary{color:#08140c;background:var(--accent);box-shadow:0 8px 22px rgba(var(--main-rgb), .35)}
+  .table{margin-top:12px;border-top:1px solid rgba(255,255,255,.08)}
+  .table .rowitem{display:grid;grid-template-columns: 170px 1fr 140px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed rgba(255,255,255,.06)}
+  .k{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .tag{display:inline-block;padding:3px 8px;border-radius:999px;background:rgba(var(--main-rgb), .22);color:var(--muted);font-size:12px;margin-right:6px}
+  .toast{position:fixed;right:16px;bottom:16px;background:#0f1a13;
+         border:1px solid rgba(255,255,255,.12);padding:12px 14px;border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.45);max-width:420px;display:none}
+  .toast b{color:var(--muted)} .toast .err{color:#ffb1b1}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">NOA</div>
+      <div class="title">
+        <b>n8n osint automation</b>
+        <div class="sub">API KEY — Key management for tools</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="ghost" href="index.html">HOME</a>
+      <a class="ghost" href="webint.html">WEBINT</a>
+      <a class="ghost" href="socmint.html">SOCMINT</a>
+      <a class="ghost" href="imint.html">IMINT</a>
+      <a class="ghost" href="geoint.html">GEOINT</a>
+      <a class="ghost" href="humint.html">HUMINT</a>
+      <a class="current" href="apikey.html">API KEY</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid">
+    <!-- Sidebar categorie OSINT -->
+    <aside class="sidebar" id="sidebar">
+      <div class="cat active" data-cat="WEBINT"><span class="chip">WEBINT</span><span>Web Intelligence</span></div>
+      <div class="cat" data-cat="SOCMINT"><span class="chip">SOCMINT</span><span>Social Media</span></div>
+      <div class="cat" data-cat="IMINT"><span class="chip">IMINT</span><span>Imagery</span></div>
+      <div class="cat" data-cat="GEOINT"><span class="chip">GEOINT</span><span>Geospatial</span></div>
+      <div class="cat" data-cat="HUMINT"><span class="chip">HUMINT</span><span>Human</span></div>
+    </aside>
+
+    <!-- Content -->
+    <section class="card">
+      <h2><span class="badge" id="catBadge">WEBINT</span> <span id="catTitle">Select service and save the key</span></h2>
+
+      <div class="section">
+        <!-- Form (solo Servizio/API e Key) -->
+        <div class="form">
+          <div class="row">
+            <div>
+              <label for="serviceSel">Service/API</label>
+              <select id="serviceSel"></select>
+            </div>
+            <div>
+              <label for="apiKey">API Key / Token</label>
+              <input id="apiKey" placeholder="Paste your API key or token here" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="saveBtn">Save API Key</button>
+          </div>
+        </div>
+
+        <!-- Elenco chiavi salvate (si aggiorna dopo Salva) -->
+        <div class="table" id="keysTable"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  // Temi identici alle UI OSINT
+  const THEMES = {
+    WEBINT: { bg:'#08100b', panel:'#0f1a13', panel2:'#132217', muted:'#cfe3d6', main:'#16a34a', soft:'#34d399', chip:'#eefdf5', chipText:'#062313' },
+    SOCMINT:{ bg:'#10090a', panel:'#171113', panel2:'#201417', muted:'#ffdede', main:'#ef4444', soft:'#fb7185', chip:'#fff0f0', chipText:'#2a090b' },
+    IMINT:  { bg:'#110b06', panel:'#191009', panel2:'#20140a', muted:'#ffe6d1', main:'#ff7a18', soft:'#c2410c', chip:'#fff1e6', chipText:'#1a0e06' },
+    GEOINT: { bg:'#0a0f19', panel:'#0f1524', panel2:'#121a2c', muted:'#cfe3ff', main:'#3b82f6', soft:'#60a5fa', chip:'#eef6ff', chipText:'#0b1430' },
+    HUMINT: { bg:'#0b0b0d', panel:'#141417', panel2:'#1a1c21', muted:'#a3a8b3', main:'#ffd400', soft:'#ffe34d', chip:'#fff7e6', chipText:'#111' }
+  };
+  function applyTheme(cat){
+    const t = THEMES[cat] || THEMES.WEBINT;
+    const r = document.documentElement.style;
+    // variabili base
+    r.setProperty('--bg', t.bg); r.setProperty('--panel', t.panel); r.setProperty('--panel2', t.panel2);
+    r.setProperty('--muted', t.muted); r.setProperty('--main', t.main); r.setProperty('--soft', t.soft);
+    r.setProperty('--chip', t.chip); r.setProperty('--chipText', t.chipText);
+    r.setProperty('--accent', `linear-gradient(135deg, ${t.soft}, ${t.main})`);
+    // ring coerente
+    r.setProperty('--ring', `0 0 0 3px ${hexToRgba(t.soft, .30)}`);
+    // RGB per alpha dinamiche in CSS
+    r.setProperty('--bg-rgb',  hexToRgb(t.bg));
+    r.setProperty('--main-rgb',hexToRgb(t.main));
+    r.setProperty('--soft-rgb',hexToRgb(t.soft));
+    // aggiorna sfondo a tema (fallback a CSS già variabilizzato)
+    document.body.style.background =
+      `radial-gradient(900px 520px at 110% -10%, ${hexToRgba(t.soft,.12)}, transparent 60%),
+       radial-gradient(900px 520px at -10% 110%, ${hexToRgba(t.main,.12)}, transparent 60%),
+       ${t.bg}`;
+  }
+  function hexToRgb(hex){
+    const h = hex.replace('#','');
+    const v = h.length===3 ? h.split('').map(x=>x+x).join('') : h;
+    const n = parseInt(v,16); const r=(n>>16)&255,g=(n>>8)&255,b=n&255; return `${r},${g},${b}`;
+  }
+  function hexToRgba(hex,a){ return `rgba(${hexToRgb(hex)},${a})`; }
+
+  const WEBHOOK_URL = "http://localhost:5678/webhook/save-keys";
+
+  const SERVICES = {
+    WEBINT: [
+      "AbuseIPDB","AlienVault OTX","bdc_ip","Company Enrich","DNS Lookup","FraudLabs Pro","GNews","GreyNoise",
+      "Host.io","IPapi","IPinfo","IPStack","ip2location","ipgeolocation","iplocate","iplookup","ipquery",
+      "Malshare","NewsAPI","NewsData","OpenCage","RapidApi","SecurityTrails","TheNewsAPI","Tomba","URL Lookup",
+      "URL → Markdown","urlscan.io","VirusTotal","Wayback Machine","Web Archive","WHOIS","WorldNewsAPI"
+    ],
+    SOCMINT: [ "RapidApi" ],
+    IMINT:   [ "FaceDetect","ImageToText","ObjectDetection","RapidApi" ],
+    GEOINT:  [ "RapidApi","geocode","geokeo","iqair","theipapi","weatherapi","zipcodestack" ],
+    HUMINT:  [
+      "RapidApi","abstractapi","bdc_email","BDC_number","bank data","cars","carMakes","carModels","clearbit autocomplete",
+      "disifyDomain","disifyEmail","Disposable Email Checker","electricVehicle","helicopter",
+      "hunter company enrichment","hunter email finder","hunter email verifier","hunter person enrichment",
+      "ibanapi","leakcheck","marketcap","motorcycles","numberverification","Open Corporates","openBRIS",
+      "swiftcode","Validate","vat validation","vatcheck","veriphone","Wikipedia"
+    ]
+  };
+
+  let currentCat = "WEBINT";
+  const sidebar = document.getElementById("sidebar");
+  const badge = document.getElementById("catBadge");
+  const title = document.getElementById("catTitle");
+  const sel = document.getElementById("serviceSel");
+  const apiKey = document.getElementById("apiKey");
+  const table = document.getElementById("keysTable");
+
+  applyTheme(currentCat);
+  renderServices();
+
+  sidebar.addEventListener("click", (e)=>{
+    const item = e.target.closest(".cat");
+    if(!item) return;
+    [...document.querySelectorAll(".cat")].forEach(c=>c.classList.remove("active"));
+    item.classList.add("active");
+    currentCat = item.dataset.cat;
+    badge.textContent = currentCat;
+    title.textContent = "Select service and save the key";
+    applyTheme(currentCat);
+    renderServices();
+  });
+
+  function renderServices(){
+    sel.innerHTML = "";
+    const list = [...(SERVICES[currentCat] || [])].sort((a,b)=>a.localeCompare(b,'it',{sensitivity:'base'}));
+    list.forEach(name=>{
+      const opt = document.createElement("option");
+      opt.value = name; opt.textContent = name; sel.appendChild(opt);
+    });
+    apiKey.value = "";
+  }
+
+  function escapeHTML(s){ return s.replace(/[&<>'"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m])); }
+
+  async function safeFetch(url, opts){
+    try{
+      const res = await fetch(url, opts);
+      if(!res.ok && res.status !== 0){
+        const t = await res.text().catch(()=> '');
+        throw new Error(`HTTP ${res.status} ${t || ''}`.trim());
+      }
+      return res;
+    }catch(err){
+      const msg = String(err && (err.message || err)).toLowerCase();
+      if (msg.includes('failed to fetch') || msg.includes('networkerror')) {
+        return null; // silenzioso
+      }
+      throw err;
+    }
+  }
+
+  document.getElementById("saveBtn").addEventListener("click", async ()=>{
+    const service = sel.value;
+    const key = apiKey.value.trim();
+    if(!service) return toast("Select a service/API.");
+    if(!key) return toast("Enter an API Key / Token.");
+
+    const payload = { category: currentCat, service, key };
+    try{
+      await safeFetch(WEBHOOK_URL, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      toast(`<b>Saved</b>: ${escapeHTML(service)} (${escapeHTML(currentCat)})`);
+      // carica elenco in modalità silenziosa: nessun toast se non raggiungibile
+      loadList({ silent:true }).catch(()=>{});
+    }catch(err){
+      toast(`<span class="err">Error saving:</span> ${escapeHTML(err.message)}`);
+    }
+  });
+
+  async function loadList({silent=false}={}){
+    try{
+      const res = await fetch(WEBHOOK_URL + "?list=1");
+      if(!res.ok && res.status !== 0){
+        const t = await res.text().catch(()=> '');
+        throw new Error(`HTTP ${res.status} ${t || ''}`.trim());
+      }
+      let data = [];
+      try{ data = await res.json(); } catch{ data = []; }
+      renderList(Array.isArray(data) ? data : []);
+    }catch(err){
+      const msg = String(err && (err.message || err)).toLowerCase();
+      if (silent && (msg.includes('failed to fetch') || msg.includes('networkerror'))) {
+        return; // nessun toast
+      }
+      if (!silent){
+        toast(`<span class="err">Impossibile caricare elenco:</span> ${escapeHTML(err.message||String(err))}`);
+      }
+    }
+  }
+
+  function renderList(items){
+    table.innerHTML = "";
+    if(!items || !items.length){
+      table.innerHTML = `<div class="rowitem"><div class="k">Nessuna chiave salvata.</div></div>`;
+      return;
+    }
+    items.forEach(row=>{
+      const div = document.createElement("div");
+      div.className = "rowitem";
+      const cat = escapeHTML(row.category || "");
+      const svc = escapeHTML(row.service || "");
+      const masked = row.key ? mask(row.key) : "";
+      div.innerHTML = `
+        <div class="k"><span class="tag">${cat}</span></div>
+        <div class="k">${svc}</div>
+        <div class="k">${masked}</div>
+      `;
+      table.appendChild(div);
+    });
+  }
+
+  function mask(s){
+    const t = String(s);
+    if(t.length <= 6) return "••••";
+    return t.slice(0,3) + "•".repeat(t.length-6) + t.slice(-3);
+  }
+
+  const toastEl = document.getElementById('toast'); let hideTimer;
+  function toast(html){
+    toastEl.innerHTML = html;
+    toastEl.style.display = 'block';
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=> toastEl.style.display='none', 4200);
+  }
+</script>
+</body>
+</html>

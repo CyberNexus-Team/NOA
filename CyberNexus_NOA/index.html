@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NOA — N8N OSINT Automation</title>
+<style>
+  :root{
+    /* Home palette */
+    --bg:#0b0f1a; --panel:#10182b; --panel2:#12203a;
+    --muted:#cfe3ff; --white:#fff;
+
+    /* Brand + UI colors */
+    --main:#3b82f6; --soft:#60a5fa;                 /* base blue */
+    --violet:#8b5cf6; --violet-soft:#a78bfa;        /* NOA wordmark color */
+    --green:#16a34a; --green-soft:#34d399;          /* WEBINT */
+    --blue:#3b82f6;  --blue-soft:#60a5fa;           /* GEOINT */
+    /* IMINT dark orange */
+    --imint:#ff7a18; --imint-soft:#ffb26b;
+    /* SOCMINT red */
+    --red:#ef4444; --red-soft:#f87171;
+    /* HUMINT yellow */
+    --yellow:#ffd400; --yellow-soft:#ffef80;
+    /* API KEY */
+    --slate:#6b7280; --slate-soft:#cbd5e1;
+
+    --accent:linear-gradient(135deg, var(--soft), var(--main));
+    --radius:18px; --ring:0 0 0 3px rgba(59,130,246,.28);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:
+      radial-gradient(900px 520px at 110% -10%, rgba(96,165,250,.14), transparent 60%),
+      radial-gradient(900px 520px at -10% 110%, rgba(59,130,246,.12), transparent 60%),
+      var(--bg);
+    color:var(--white);
+    font:15px/1.6 system-ui, Segoe UI, Roboto, Ubuntu, Arial;
+  }
+
+  /* Header + nav */
+  .header{position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
+    background:rgba(10,15,26,.65);border-bottom:1px solid rgba(255,255,255,.06)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;gap:16px}
+  .brand{display:flex;align-items:center;gap:14px}
+  /* NOA badge uses same violet of NOA wordmark */
+  .logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--violet-soft),var(--violet));
+    display:grid;place-items:center;color:#150a22;font-weight:900;box-shadow:0 10px 26px rgba(139,92,246,.35)}
+  .title b{font-size:18px;letter-spacing:.4px}
+  .title .sub{font-size:12px;color:var(--muted)}
+  .nav{display:flex;gap:10px;flex-wrap:wrap}
+  .nav a{
+    text-decoration:none;color:#081420;background:#eef6ff;padding:8px 12px;border-radius:999px;
+    font-weight:900;font-size:12px;display:inline-flex;align-items:center;gap:6px;
+    box-shadow:0 6px 16px rgba(59,130,246,.18);transition:.15s}
+  .nav a:hover{transform:translateY(-1px)}
+  .nav .ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.2);box-shadow:none}
+  /* HOME button colored like NOA (violet) */
+  .nav .current{background:linear-gradient(135deg,var(--violet-soft),var(--violet));color:#150a22}
+
+  /* Layout container */
+  .container{max-width:1200px;margin:24px auto;padding:0 18px 80px}
+
+  /* Hero */
+  .hero{display:grid;gap:18px;place-items:center;text-align:center;margin:10px 0 18px}
+  .hero .hlogo{width:min(520px,90%);border-radius:16px}
+  .hero h1{margin:8px 0 0;font-size:34px;letter-spacing:.3px}
+  .hero p.sub{margin:0;color:var(--muted)}
+  .badges{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .btn{border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.18s}
+  /* Getting Started in violet */
+  .btn.primary{color:#150a22;background:linear-gradient(135deg,var(--violet-soft),var(--violet));box-shadow:0 8px 22px rgba(139,92,246,.35)}
+  .btn.ghost{color:#fff;background:transparent;border:1px solid rgba(255,255,255,.14)}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.small{padding:9px 12px;font-size:12px;border-radius:12px}
+
+  /* Colored module buttons (match each UI) */
+  .btn-webint{background:linear-gradient(135deg,var(--green-soft),var(--green));color:#062313;box-shadow:0 8px 22px rgba(22,163,74,.35)}
+  .btn-geoint{background:linear-gradient(135deg,var(--blue-soft),var(--blue));color:#061420;box-shadow:0 8px 22px rgba(59,130,246,.35)}
+  .btn-imint{background:linear-gradient(135deg,var(--imint-soft),var(--imint));color:#2a0f05;box-shadow:0 8px 22px rgba(255,122,24,.35)}
+  .btn-socmint{background:linear-gradient(135deg,var(--red-soft),var(--red));color:#2a0c0c;box-shadow:0 8px 22px rgba(239,68,68,.35)}
+  .btn-humint{background:linear-gradient(135deg,var(--yellow-soft),var(--yellow));color:#221a05;box-shadow:0 8px 22px rgba(255,212,0,.35)}
+  .btn-apikey{background:linear-gradient(135deg,var(--slate-soft),var(--slate));color:#0b0f14;box-shadow:0 8px 22px rgba(107,114,128,.35)}
+
+  /* Sections */
+  .section{margin:26px 0}
+  .section h2{margin:0 0 12px;font-size:20px}
+  .muted{color:var(--muted)}
+
+  /* Cards grid */
+  .grid{display:grid;gap:16px}
+  @media (min-width:720px){ .grid.cols-3{grid-template-columns:repeat(3,1fr)} }
+  @media (min-width:980px){ .grid.cols-4{grid-template-columns:repeat(4,1fr)} }
+
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+        border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px}
+  .card .title{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+  .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .link{color:#93c5fd;text-decoration:none}
+  .link:hover{text-decoration:underline}
+
+  /* Steps / code */
+  .steps{display:grid;gap:12px}
+  .step{display:flex;gap:12px;align-items:flex-start;background:var(--panel);border:1px solid rgba(255,255,255,.08);
+        border-radius:14px;padding:12px}
+  /* violet numbers */
+  .num{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--violet-soft),var(--violet));display:grid;place-items:center;color:#150a22;font-weight:900}
+  pre{margin:0;background:var(--panel2);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:12px;overflow:auto}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px}
+  .copybar{display:flex;justify-content:flex-end;margin-top:8px}
+  .copy{border:1px solid rgba(255,255,255,.18);background:transparent;color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer}
+  .copy:hover{border-color:rgba(59,130,246,.55);box-shadow:var(--ring)}
+
+  /* Footer */
+  .footer{margin:24px 0 0;padding:18px;border-top:1px solid rgba(255,255,255,.08);color:var(--muted);font-size:13px}
+
+  /* Toast */
+  .toast{position:fixed;right:16px;bottom:16px;background:#0e1626;border:1px solid rgba(255,255,255,.12);
+         padding:12px 14px;border-radius:12px;box-shadow:0 10px 28px rgba(0,0,0,.45);max-width:360px;display:none}
+  .toast b{color:#d9ecff}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">NOA</div>
+      <div class="title">
+        <b>N8N OSINT Automation</b>
+        <div class="sub">Home</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a class="current" href="index.html">HOME</a>
+      <a class="ghost" href="webint.html">WEBINT</a>
+      <a class="ghost" href="socmint.html">SOCMINT</a>
+      <a class="ghost" href="imint.html">IMINT</a>
+      <a class="ghost" href="geoint.html">GEOINT</a>
+      <a class="ghost" href="humint.html">HUMINT</a>
+      <a href="apikey.html">API KEY</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <!-- HERO -->
+  <section class="hero">
+    <img class="hlogo" src="https://github.com/CyberNexus-Team/CyberNexus-Team/blob/main/Logo%20Definitivo.png?raw=true" alt="NOA Logo" />
+    <h1>NOA — N8N OSINT Automation</h1>
+    <p class="sub">A powerful, automated OSINT framework to connect the dots and uncover hidden information.</p>
+
+    <div class="badges">
+      <a href="https://github.com/CyberNexus-Team/NOA">
+        <img src="https://img.shields.io/badge/Project%20Status-Active-brightgreen?style=for-the-badge" alt="Project Status">
+      </a>
+      <a href="https://github.com/CyberNexus-Team/NOA/blob/main/LICENSE">
+        <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License">
+      </a>
+      <!-- Issues badge removed on request -->
+    </div>
+
+    <div class="cta">
+      <a class="btn primary" href="#getting-started">Getting Started</a>
+      <a class="btn ghost" href="apikey.html">Configure API Keys</a>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section class="section">
+    <h2>Main modules</h2>
+    <p class="muted">Investigate across domains with preconfigured n8n workflows and a unified web interface.</p>
+    <div class="grid cols-3">
+      <div class="card">
+        <div class="title"><b>WEBINT</b></div>
+        <p>IP intelligence, domain/WHOIS, URL parsing, web archives, reputation & news.</p>
+        <div class="actions">
+          <a class="btn small btn-webint" href="webint.html">Open WEBINT</a>
+          <a class="link" href="apikey.html">Required APIs →</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="title"><b>GEOINT</b></div>
+        <p>Geocoding, weather/air quality, places autocomplete, flights, IP.</p>
+        <div class="actions">
+          <a class="btn small btn-geoint" href="geoint.html">Open GEOINT</a>
+          <a class="link" href="apikey.html">Required APIs →</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="title"><b>IMINT</b></div>
+        <p>Face detection, OCR, object detection & reverse image search.</p>
+        <div class="actions">
+          <a class="btn small btn-imint" href="imint.html">Open IMINT</a>
+          <a class="link" href="apikey.html">Required APIs →</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="title"><b>SOCMINT</b></div>
+        <p>Social media analysis with dedicated workflows and automated reports.</p>
+        <div class="actions">
+          <a class="btn small btn-socmint" href="socmint.html">Open SOCMINT</a>
+          <a class="link" href="apikey.html">Required APIs →</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="title"><b>HUMINT</b></div>
+        <p>Email/phone, companies, people and vehicles: enrichment and validation.</p>
+        <div class="actions">
+          <a class="btn small btn-humint" href="humint.html">Open HUMINT</a>
+          <a class="link" href="apikey.html">Required APIs →</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="title"><b>API KEY</b></div>
+        <p>BYOK model: add your keys and start. Local-only storage.</p>
+        <div class="actions">
+          <a class="btn small btn-apikey" href="apikey.html">Open Key Manager</a>
+          <a class="link" href="https://github.com/CyberNexus-Team/NOA/blob/main/API_KEYS.md">API Keys Guide →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <b>Start containers</b>
+          <p class="muted">NOA is designed for Docker: n8n + local web UI.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <b>Configure API keys</b>
+          <p class="muted">Open the <i>API KEY</i> page and paste your tokens. BYOK-friendly, free tiers supported.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <b>Run searches</b>
+          <p class="muted">Pick a category & tool, enter data and send: the n8n switch routes requests, the UI avoids “false errors”.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <div>
+          <b>Automatic reports</b>
+          <p class="muted">Structured outputs saved locally under <code>/reports</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GETTING STARTED -->
+  <section id="getting-started" class="section">
+    <h2>Getting Started</h2>
+    <div class="card">
+      <p>Follow these steps to get your own instance of NOA up and running.</p>
+
+      <h3>Prerequisites</h3>
+      <ul>
+        <li><a class="link" href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> and <a class="link" href="https://code.visualstudio.com/download">VScode</a> installed on your system.</li>
+        <li>API keys from the services you intend to use.</li>
+      </ul>
+
+      <h3>Installation</h3>
+      <ol>
+        <li><b>Dowload the repository:</b></li>
+        <li><b>Open the folder with VScode, open the cmd terminal and start the services using Docker Compose:</b>
+          <pre><code id="code1">docker-compose up -d</code></pre>
+          <div class="copybar"><button class="copy" data-copy="code1">Copy</button></div>
+          <p class="muted">This command will start both the n8n container and the local web interface.</p>
+        </li>
+        <li><b>Set up n8n:</b>
+          <ul>
+            <li>Open your browser and navigate.</li>
+            <li>Set up your n8n owner account.</li>
+            <li>Import the provided workflow file into n8n.</li>
+          </ul>
+        </li>
+        <li><b>Configure API Keys &amp; Credentials:</b>
+          <ul>
+            <li>To get your API keys, we've compiled a list of direct registration links for all supported services. You can find it in our <a class="link" href="https://github.com/CyberNexus-Team/NOA/blob/main/API_KEYS.md"><b>API_KEYS.md</b></a> document.</li>
+            <li>Once you have your keys, open the NOA interface, navigate to the "API KEY" section in the top right bar, and add a new API KEY for each service you use.</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section class="section">
+    <h2>Resources</h2>
+    <div class="grid cols-4">
+      <div class="card"><b>Repository</b><p><a class="link" href="https://github.com/CyberNexus-Team/NOA">github.com/CyberNexus-Team/NOA</a></p></div>
+      <div class="card"><b>Issues</b><p><a class="link" href="https://github.com/CyberNexus-Team/NOA/issues">Report bug / request feature</a></p></div>
+      <div class="card"><b>License</b><p><a class="link" href="LICENSE.md">MIT License</a></p></div>
+      <div class="card"><b>API Keys</b><p><a class="link" href="https://github.com/CyberNexus-Team/NOA/blob/main/API_KEYS.md">API Keys guide</a></p></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <h2>FAQ</h2>
+    <div class="grid">
+      <div class="card">
+        <b>Do I have to pay to use NOA?</b>
+        <p class="muted">No. NOA is free. Most external services require API keys: you can use their free tiers where available (BYOK).</p>
+      </div>
+      <div class="card">
+        <b>Where are reports saved?</b>
+        <p class="muted">Locally, inside the project folder <code>/reports</code> (mounted via Docker Compose).</p>
+      </div>
+      <div class="card">
+        <b>I get “Failed to fetch”. Is it an error?</b>
+        <p class="muted">Usually no: the UI still sends to the n8n switch and ignores network “false errors”.</p>
+      </div>
+      <div class="card">
+        <b>Can I add new tools?</b>
+        <p class="muted">Yes. Add the switch in the n8n workflow and register the new tool in the proper UI category with its action.</p>
+      </div>
+      <div class="card">
+        <b>How do I obtain API keys?</b>
+        <p class="muted">See <a class="link" href="https://github.com/CyberNexus-Team/NOA/blob/main/API_KEYS.md">API_KEYS.md</a> for direct links to supported providers.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>© <span id="year"></span> NOA — N8N OSINT Automation • MIT License • Made for investigators, researchers & security teams.</div>
+  </footer>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+  // Copy to clipboard + toast
+  document.querySelectorAll('.copy').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-copy');
+      const el = document.getElementById(id);
+      if(!el) return;
+      const text = el.innerText;
+      navigator.clipboard.writeText(text).then(()=>{
+        toast('<b>Copied</b> to clipboard.');
+      }).catch(()=>{
+        toast('Unable to copy. Please copy manually.');
+      });
+    });
+  });
+
+  const toastEl = document.getElementById('toast'); let hideTimer;
+  function toast(html){
+    toastEl.innerHTML = html;
+    toastEl.style.display = 'block';
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=> toastEl.style.display='none', 3600);
+  }
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
