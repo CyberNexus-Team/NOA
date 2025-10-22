@@ -27,13 +27,8 @@ The system is designed to run seamlessly on Docker, ensuring a simple, free, and
 ### Key Features
 
 *   **Multi-Domain Intelligence:** Conduct comprehensive investigations across various fields:
-    *   **WEBINT** (Web Intelligence)
-    *   **GEOINT** (Geospatial Intelligence)
-    *   **IMINT** (Imagery Intelligence)
-    *   **SOCMINT** (Social Media Intelligence)
-    *   **HUMINT** (Human Intelligence)
     <p align="center">
-      <img src="https://github.com/CyberNexus-Team/NOA/blob/main/NOA-photo/noa-modules.png" alt="NOA Modules Overview" width="1000"/>
+      <img src="https://github.com/CyberNexus-Team/NOA/blob/main/NOA-photo/noa-module.png" alt="NOA Modules Overview" width="1000"/>
     </p>
 *   **Pre-configured Workflow:** A ready-to-use n8n workflow allows you to start your analysis immediately.
 *   **Simple Web Interface:** Use the included Dockerized website to easily submit your search queries to the n8n backend.
@@ -44,7 +39,7 @@ The system is designed to run seamlessly on Docker, ensuring a simple, free, and
 
 <!-- UN'IMMAGINE O UNA GIF VALE PIÙ DI MILLE PAROLE. Crea uno screenshot dell'interfaccia web e caricalo qui. -->
 <p align="center">
-  <img src="[URL_SCREENSHOT_O_GIF_DI_NOA_IN_AZIONE]" alt="NOA in action"/>
+  <img src="https://github.com/CyberNexus-Team/NOA/blob/main/NOA-photo/GIF.png" alt="NOA in action"/>
 </p>
 
 ---
