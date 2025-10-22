@@ -1,0 +1,165 @@
+{
+  "name": "NOA – Get API Key",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -192,
+        112
+      ],
+      "id": "decfa7d1-4794-4d8a-b21a-26bb4991b8f2",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT api_key AS `key`\nFROM api_keys\nWHERE user_id = '{{$json.userId || \"default\"}}'\n  AND provider = '{{$json.provider}}'\nLIMIT 1",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "47c51d18-7088-4752-bbce-c0678ad9cf0e",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "mySql": {
+          "id": "oCnz6MBHNicYinyO",
+          "name": "NOA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        208,
+        96
+      ],
+      "id": "643a34ee-0337-452b-96c0-eedf56a5ff64",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "if (!$json.key) {\n  throw new Error('API key non trovata (userId=default, provider=\"' + $json.provider + '\")');\n}\nreturn [{ json: $json }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        96
+      ],
+      "id": "e3b32be1-cdce-4966-93d6-7ae8dddf6a40",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "656d9169-8fe5-4ee9-b4f7-c61dcbdb0c2b",
+              "name": "key",
+              "value": "={{$json.key}}",
+              "type": "string"
+            },
+            {
+              "id": "e60ef9f2-7038-45d8-a479-0cdf93bd615e",
+              "name": "body.data",
+              "value": "={{$json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "10109cad-577c-4470-ab96-c706cd27b8b0",
+              "name": "provider",
+              "value": "={{$json.provider}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        96
+      ],
+      "id": "26f3430b-ec62-462e-a5ba-769ab7c52f9d",
+      "name": "Provider e Key"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Provider e Key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "89b81703-777a-49cb-9091-84482c413b2a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6bd339f911a3c4d63129180a1951c103a2f0d148fb90c68d610c30dfde901589"
+  },
+  "id": "nYYd8cigSv29Lzo0",
+  "tags": []
+}

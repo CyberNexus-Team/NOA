@@ -1,0 +1,3962 @@
+{
+  "name": "GEOINT - Gloria 21.10.2025",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cb23b1f4-e035-482c-b0e2-fa81355311eb",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        8128
+      ],
+      "id": "2c74e2c9-92a2-4b9b-b322-34c6ee01e271",
+      "name": "Webhook",
+      "webhookId": "1d18c0d0-ddee-4564-9a07-dd492f7431cc"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://airports.p.rapidapi.com/v1/airports",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-rapidapi-host",
+              "value": "airports.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\"search\": \"{{$json.body.data}}\"}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        6000
+      ],
+      "id": "d18389e1-dd7e-4edd-a737-1c199c133b88",
+      "name": "World Airports"
+    },
+    {
+      "parameters": {
+        "url": "=https://iata-airports.p.rapidapi.com/airports/{{$json.body.data}}/",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "iata-airports.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        6320
+      ],
+      "id": "b8b5a24b-8955-424d-9207-f3804801f09f",
+      "name": "IATA Airports"
+    },
+    {
+      "parameters": {
+        "url": "https://google-maps-extractor2.p.rapidapi.com/autocomplete",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{$json.body.data}}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "google-maps-extractor2.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        7280
+      ],
+      "id": "61715540-acf2-4bd4-b699-9aaa1a797cab",
+      "name": "Google Maps Extractor"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "109d2858-fd5f-4bb4-8c14-b90f45a65fd6",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "World Airports",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "World Airports"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5564dbbb-acb3-4102-9c96-eedbe8363176",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "IATA Airports",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "IATA Airports"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "27dd0173-a31a-4326-a117-a97f707b2616",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "Google Flights",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Google Flights"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6a2670cd-fa3d-48b9-af71-9fc922d98cc3",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "Flight Fare Search",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Flight Fare Search"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bcd46dfd-bfe8-4750-b719-d8e468def37d",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "Google Maps Extractor",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Google Maps Extractor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4639f54d-1f42-4841-bb33-b4b7164afc60",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "=Real-Time Glassdoor Data",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Real-Time Glassdoor Data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1808,
+        7456
+      ],
+      "id": "0b810b64-02d9-4962-b66e-2c3ab80e3385",
+      "name": "GEOINT"
+    },
+    {
+      "parameters": {
+        "url": "https://google-flights2.p.rapidapi.com/api/v1/searchFlights",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "departure_id",
+              "value": "={{ $json.body.data.split(',')[0].trim() }}"
+            },
+            {
+              "name": "arrival_id",
+              "value": "={{ $json.body.data.split(',')[1].trim() }}"
+            },
+            {
+              "name": "outbound_date",
+              "value": "={{ $json.body.data.split(',')[2].trim() }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "google-flights2.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        6640
+      ],
+      "id": "c64f6abd-4620-49f4-9604-7d88638ca09b",
+      "name": "Google Flights"
+    },
+    {
+      "parameters": {
+        "url": "https://real-time-glassdoor-data.p.rapidapi.com/job-search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.body.data.split(',')[0].trim() }}"
+            },
+            {
+              "name": "location",
+              "value": "={{ $json.body.data.split(',')[1].trim() }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "real-time-glassdoor-data.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        7600
+      ],
+      "id": "9f13308e-d271-41e5-803c-9dfaae413233",
+      "name": "Real-Time Glassdoor Data"
+    },
+    {
+      "parameters": {
+        "url": "https://flight-fare-search.p.rapidapi.com/v2/flights",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "from",
+              "value": "={{ $json.body.data.split(',')[0].trim() }}"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.body.data.split(',')[1].trim() }}"
+            },
+            {
+              "name": "date",
+              "value": "={{ $json.body.data.split(',')[2].trim() }}"
+            },
+            {
+              "name": "adult",
+              "value": "={{ $json.body.data.split(',')[3].trim() }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "flight-fare-search.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        6960
+      ],
+      "id": "e506c53f-e3ae-419e-b68f-1fd75aa4c7ba",
+      "name": "Flight Fare Search"
+    },
+    {
+      "parameters": {
+        "url": "https://api.airvisual.com/v2/city",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "city",
+              "value": "={{ $json.body.data.split(',')[0].trim() }}"
+            },
+            {
+              "name": "state",
+              "value": "={{ $json.body.data.split(',')[1].trim() }}"
+            },
+            {
+              "name": "country",
+              "value": "={{ $json.body.data.split(',')[2].trim() }}"
+            },
+            {
+              "name": "key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        8448
+      ],
+      "id": "157c7334-c65a-4f9a-9623-691f1d9cdd9f",
+      "name": "iqair"
+    },
+    {
+      "parameters": {
+        "url": "=https://geocode.xyz/{{$json.body.data}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "json",
+              "value": "={{$json.body.data}}"
+            },
+            {
+              "name": "auth",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        8768
+      ],
+      "id": "566f4d8a-ad79-424c-ab99-961ae29acddf",
+      "name": "geocode"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.theipapi.com/v1/ip/{{$json.body.data}}?api_key={{$json.key}}",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "={{$json.key}}"
+            },
+            {
+              "name": "ip",
+              "value": "={{$json.body.data}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        9088
+      ],
+      "id": "a489134f-8ec2-4a5a-82a4-9821a75e2c3e",
+      "name": "theipapi"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.vatcheckapi.com/v2/check",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "={{$json.key}}"
+            },
+            {
+              "name": "vat_number",
+              "value": "={{ $json.body.data.split(',')[0].trim() }}"
+            },
+            {
+              "name": "country_code",
+              "value": "={{ $json.body.data.split(',')[1].trim() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        9408
+      ],
+      "id": "18e7ba15-bef0-41a0-9484-31d98d47de04",
+      "name": "zipcodestack"
+    },
+    {
+      "parameters": {
+        "url": "https://api.weatherapi.com/v1/current.json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{$json.body.data}}"
+            },
+            {
+              "name": "key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4096,
+        9728
+      ],
+      "id": "c9cfd6cf-fd62-4fc5-a8a2-1eef1dd28e52",
+      "name": "weatherapi"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "search_iqair",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b47547ed-e9d5-4292-baa7-a0da071029d6"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "iqair"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "b20dbdbc-50ab-4149-94d5-641b8402e227",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "search_geocode",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "geocode"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "93e8b3b8-0dc8-4676-928e-0950433db949",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "search_theipapi",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "theipapi"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "41cfc5ad-d585-40e8-88a2-05ea454007a5",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "search_zipcodestack",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "zipcodestack"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "30328895-993b-41e3-bdf9-c1cbeb28e941",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "search_weatherapi",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "weatherapi"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1808,
+        8448
+      ],
+      "id": "d458b138-e580-46ad-99de-cfd273fe1531",
+      "name": "GEOINT - 1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        6000
+      ],
+      "id": "e9628b28-21c7-4d2b-8ceb-831688fd7035",
+      "name": "Set provider (RapidApi)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        6320
+      ],
+      "id": "b9c1ccf7-8fbe-4dd6-a575-fde46555d395",
+      "name": "Set provider (RapidApi)1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        6640
+      ],
+      "id": "41dd533d-a06c-4e5a-aa95-95ae78031813",
+      "name": "Set provider (RapidApi)2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        6960
+      ],
+      "id": "b3dae708-8a2d-4edd-8431-956af14ddcc1",
+      "name": "Set provider (RapidApi)3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        7280
+      ],
+      "id": "453627af-6d15-48bc-b655-731cd228146d",
+      "name": "Set provider (RapidApi)4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        7600
+      ],
+      "id": "80e2cf94-c360-4fab-ba3a-93f0c33ca2a1",
+      "name": "Set provider (RapidApi)5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "iqair",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        8448
+      ],
+      "id": "87131600-452f-4549-b62a-c59fb3be3971",
+      "name": "Set provider (iqair)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "weatherapi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        9728
+      ],
+      "id": "7adef266-920b-403e-81a1-a167f3f4c729",
+      "name": "Set provider (weatherapi)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "geocode",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        8768
+      ],
+      "id": "afd5c2f7-86f1-4c55-8c46-ded2d5581101",
+      "name": "Set provider (geocode)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "theipapi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        9088
+      ],
+      "id": "e47bf81f-187a-4e8f-9e26-5c9fae5009b7",
+      "name": "Set provider (theipapi)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "zipcodestack",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            },
+            {
+              "id": "bff4090b-dc14-4ed9-87c0-8fc04bb0a2f5",
+              "name": "vat_number",
+              "value": "={{ $json.body.data.split(', ')[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "182efdec-a9ed-4a67-80e9-b767a0c6d45d",
+              "name": "country_code",
+              "value": "={{ $json.body.data.split(', ')[1] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2512,
+        9408
+      ],
+      "id": "c32667df-e7e7-46d6-bd52-63c12f07c101",
+      "name": "Set provider (zipcodestack)"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        6336
+      ],
+      "id": "45d87930-056a-45ad-bc3a-fee32850bf06",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "IATA Airports",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        6480
+      ],
+      "id": "cdc0038f-a216-4907-abd6-a4dcba483053",
+      "name": "Input e Tool1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        6320
+      ],
+      "id": "223f1a63-ca64-4890-8c9f-9d66a365795c",
+      "name": "Risultati1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        6656
+      ],
+      "id": "fff8c115-a5a7-4a35-8c7f-99559431d7bd",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "Google Flights",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        6800
+      ],
+      "id": "054162a3-9c2c-49c1-b9cc-39939b1c3fe3",
+      "name": "Input e Tool2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        6640
+      ],
+      "id": "7f6e95be-2c41-40ab-8133-627145a1caaa",
+      "name": "Risultati2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        6976
+      ],
+      "id": "6ef17c57-5c0d-4617-800e-e3cd779384f4",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "Flight Fare Search",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        7120
+      ],
+      "id": "70c05334-b657-4703-b769-6e51716e05e2",
+      "name": "Input e Tool3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        6960
+      ],
+      "id": "44f5b792-6d53-4a16-8c9e-9e7581d7f0e0",
+      "name": "Risultati3"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        7296
+      ],
+      "id": "5261034a-9b38-4267-b6bc-c0b7a901ef18",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "Google Maps Extractor",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        7440
+      ],
+      "id": "e21b6731-8208-4a44-89b9-51ac4935a243",
+      "name": "Input e Tool4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        7280
+      ],
+      "id": "e1a52ace-9392-4f40-8942-f2d0b798e376",
+      "name": "Risultati4"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        7616
+      ],
+      "id": "cf620ac7-c15c-40aa-a3e1-c36149252751",
+      "name": "Merge5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "Real-Time Glassdoor Data",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        7760
+      ],
+      "id": "4931b7d6-47f3-4cd8-8f36-5f7d833dfd11",
+      "name": "Input e Tool5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        7600
+      ],
+      "id": "11a535aa-cb7c-43b2-bb27-40375d7cdf0c",
+      "name": "Risultati5"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        8464
+      ],
+      "id": "b896fa07-a263-4d21-a072-759104f07fb6",
+      "name": "Merge9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "iqair",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        8608
+      ],
+      "id": "f5e4adb9-6172-4b93-a7de-230fd937f035",
+      "name": "Input e Tool9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{$json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        8448
+      ],
+      "id": "8b130f70-137a-4af7-9d45-02d0993fb3f9",
+      "name": "Risultati9"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        8784
+      ],
+      "id": "3eb4b99f-5cde-49b9-958b-fad88b464704",
+      "name": "Merge10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "geocode",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        8928
+      ],
+      "id": "e227733e-f2fd-4a24-903d-23f9b9c330c8",
+      "name": "Input e Tool10"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        8768
+      ],
+      "id": "d0a7dfbb-72a4-448a-85ec-50a0294adc63",
+      "name": "Risultati10"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        9104
+      ],
+      "id": "f28a2b0a-6690-4ee1-8c51-5dcc34fe275e",
+      "name": "Merge11"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "theipapi",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        9248
+      ],
+      "id": "6ffaac2e-9856-4195-8b73-40bac7103b7b",
+      "name": "Input e Tool11"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        9088
+      ],
+      "id": "c2bd2e23-16d4-4502-8c2f-f8c2be8e600b",
+      "name": "Risultati11"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        9424
+      ],
+      "id": "51c7e68f-f7c0-4af7-a057-80425a26e056",
+      "name": "Merge12"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "zipcodestack",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        9568
+      ],
+      "id": "760b64c9-55ab-4000-b54f-7d4e2a167a01",
+      "name": "Input e Tool12"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        9408
+      ],
+      "id": "e4a732dc-2953-4e33-9fca-cd991f8982a8",
+      "name": "Risultati12"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        9744
+      ],
+      "id": "a3c61ca0-8c4e-4d53-9b93-6cb0f77bb91b",
+      "name": "Merge13"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "weatherapi",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        9872
+      ],
+      "id": "e76d2396-e6b1-4394-9600-407580012710",
+      "name": "Input e Tool13"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        9728
+      ],
+      "id": "c4f84c98-0ac2-46bf-9a4e-defaf657faf0",
+      "name": "Risultati13"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4768,
+        6016
+      ],
+      "id": "9bbddabf-beea-472f-a4d9-943208cfa8dd",
+      "name": "Merge15"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        8720,
+        7760
+      ],
+      "id": "5f852b8e-a629-4a40-951b-6303a02b4154",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "World Airports",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        6160
+      ],
+      "id": "2d213716-19f2-469a-8531-17d6852027b5",
+      "name": "Input e Tool15"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        4432,
+        6000
+      ],
+      "id": "40d2d490-1102-4cee-82f0-c4310e1f97c6",
+      "name": "Risultati15"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ingress: campi Input, Tool, Risultati, Section, Save, ReportName\nconst nameRaw = ( $json.ReportName || '' ).trim();\nconst name = nameRaw || 'NOA Report';\nconst slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');\n\nconst entry = {\n  section: $json.Section || 'GEOINT',\n  tool: $json.Tool,\n  input: $json.Input,\n  result: $json.Risultati,\n  time: new Date().toISOString()\n};\n\nreturn [{ json: { entry, name, slug, save: !!$json.Save } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5408,
+        8128
+      ],
+      "id": "c3528170-7eb2-4599-8136-86459943a312",
+      "name": "Prepare Report Item6"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "658ac9d0-d002-4dbe-88cd-047bc3282b0e",
+              "leftValue": "={{ $json.save }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        5680,
+        8128
+      ],
+      "id": "82f9af14-d7da-41aa-b8c7-90d3512bdccb",
+      "name": "If12"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        5952,
+        8000
+      ],
+      "id": "651ffbb5-26d1-4e1d-a16b-2392e31f68f0",
+      "name": "Load report.json1",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        5952,
+        7760
+      ],
+      "id": "140d1c0a-1478-4774-91c0-7a06111c6c87",
+      "name": "Keep entry6"
+    },
+    {
+      "parameters": {
+        "jsCode": "// entry viene da Prepare Report Item\nconst entry = $json.entry;\nconst store = Array.isArray($json.store) ? $json.store : [];\n\nconst item = {\n  ts: new Date().toISOString(),\n  section: entry.section,  // es. GEOINT / WEBINT ecc. se lo stai passando\n  tool: entry.tool,\n  input: entry.input,\n  result: entry.result\n};\n\nstore.unshift(item); // più recente in alto\n\nreturn [{\n  json: {\n    name: $json.name,\n    slug: $json.slug,\n    store\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7120,
+        7776
+      ],
+      "id": "4e5f8dd2-7697-4e9e-bf27-9d68172009ca",
+      "name": "Append & Build Store6"
+    },
+    {
+      "parameters": {
+        "jsCode": "/* === INPUT atteso ===\n   $json.name  -> es. \"Prova\"\n   $json.slug  -> es. \"prova\"\n   $json.store -> array di entry: [{ section, tool, input, result, time }, ...]\n*/\n\n// --------- Util ---------\nconst name = $json.name || 'Report';\nconst slug = $json.slug || 'report';\nconst store = Array.isArray($json.store) ? $json.store : [];\n\nfunction fmtUTC(d = new Date()) {\n  const iso = new Date(d).toISOString();\n  return iso.replace('T', ' ').replace('Z', ' UTC').split('.')[0];\n}\n\n//Palette sezione (coppie gradiente)\nconst palette = {\n  WEBINT: ['#1fcc7a', '#17a95f'],\n  SOCMINT: ['#ff6b6b', '#e14959'],\n  IMINT:  ['#ff9a44', '#ff6a00'],  // aggiornato: arancione\n  GEOINT: ['#2d8cff', '#1b6fe6'],\n  HUMINT: ['#ffd33d', '#f0b90b'],\n  'API KEY': ['#cfd6dd', '#e6ebf0'], // aggiornato: grigio chiaro\n};\n\n//schiarisci un HEX (0–100)\nfunction lighten(hex, pct = 28) {\n  const m = hex.replace('#', '');\n  const n = m.length === 3 ? m.split('').map(x => x + x).join('') : m;\n  const r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);\n  const mix = c => Math.round(c + (255 - c) * (pct/100));\n  const toHex = v => v.toString(16).padStart(2,'0');\n  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;\n}\n\n//raggruppo per sezione (in ordine di comparsa)\nconst bySection = {};\nconst sectionsOrder = [];\nfor (const e of store) {\n  const sec = e.section || 'ALTRO';\n  if (!bySection[sec]) { bySection[sec] = []; sectionsOrder.push(sec); }\n  if (!e.time) e.time = new Date();\n  bySection[sec].push(e);\n}\n\n// --------- Render helpers ---------\nfunction esc(s){\n  return String(s)\n    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');\n}\nfunction renderScalar(v){\n  return `<span class=\"scalar\">${esc(v)}</span>`;\n}\nfunction renderValue(v, depth = 0, labelForArray = '') {\n  if (v === null || v === undefined) return '<span class=\"null\">–</span>';\n  const t = typeof v;\n  if (t === 'string' || t === 'number' || t === 'boolean') return renderScalar(v);\n\n  //Array\n  if (Array.isArray(v)) {\n    if (!v.length) return '<span class=\"empty\">[]</span>';\n    const items = v.map((item, i) => `\n      <details class=\"box\" ${depth < 2 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : ''}[${i+1}]</summary>\n        <div class=\"box-inner\">\n          ${renderValue(item, depth+1)}\n        </div>\n      </details>\n    `).join('');\n    return `\n      <details class=\"box\" ${depth < 1 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : 'Array '}(${v.length})</summary>\n        <div class=\"box-inner\">${items}</div>\n      </details>\n    `;\n  }\n\n  //Oggetto\n  const entries = Object.entries(v);\n  if (!entries.length) return '<span class=\"empty\">{}</span>';\n  const rows = entries.map(([k,val]) => {\n    const valueHTML = Array.isArray(val)\n      ? renderValue(val, depth+1, k)\n      : renderValue(val, depth+1);\n    return `\n      <tr>\n        <td class=\"k\">${esc(k)}</td>\n        <td class=\"v\">${valueHTML}</td>\n      </tr>\n    `;\n  }).join('');\n  return `<table class=\"kv nest\">${rows}</table>`;\n}\n\nfunction chipIndexHTML(sec) {\n  const colors = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  return `<a class=\"chip\" href=\"#sec-${esc(sec)}\" style=\"--c1:${colors[0]};--c2:${colors[1]}\">${esc(sec)}</a>`;\n}\n\nfunction sectionHTML(sec, entries, theme='dark') {\n  const [c1, c2] = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  const c1soft = lighten(c1, 28), c2soft = lighten(c2, 28);\n  return `\n<section class=\"section\" id=\"sec-${esc(sec)}\">\n  <h2 class=\"section-title\" style=\"--c1:${c1};--c2:${c2}\"><span class=\"dot\"></span>${esc(sec)}</h2>\n  ${entries.map(e => `\n    <article class=\"card\">\n      <div class=\"row head\">\n        <div class=\"k\">Tool</div>\n        <div class=\"v tool\"><span class=\"pill\" style=\"--p1:${c1soft};--p2:${c2soft}\">${esc(e.tool || '—')}</span></div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Date</div>\n        <div class=\"v\">${e.time ? renderScalar(fmtUTC(e.time)) : '<span class=\"muted\">—</span>'}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Input</div>\n        <div class=\"v\">${renderValue(e.input)}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Risultato</div>\n        <div class=\"v\">${renderValue(e.result)}</div>\n      </div>\n    </article>\n  `).join('')}\n</section>`;\n}\n\n// --------- HTML builder ---------\nfunction buildHTML(theme='dark') {\n  const utcStamp = fmtUTC();\n  const embedded = JSON.stringify({ name, slug, store }).replace(/</g,'\\\\u003c');\n  return `<!doctype html>\n<html lang=\"it\" class=\"t-${theme}\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(name)} — Report</title>\n<style>\n  /* ====== Theme tokens ====== */\n  :root{\n    --bg:#0b0b0d; --panel:#141417; --text:#fff; --muted:#9aa1ac; --key:#a3a8b3;\n    --chip-bg:rgba(255,255,255,.06); --chip-brd:rgba(255,255,255,.16);\n    --zebra:rgba(255,255,255,.04); --accent:#2d8cff;\n    --shadow:0 10px 30px rgba(0,0,0,.35);\n    --btn-bg:#1c1e22; --btn-brd:#2a2d32; --btn-t:#fff;\n    --box-bg:#101114; --box-brd:#272a30;\n  }\n  .t-light{\n    --bg:#f6f8fb; --panel:#ffffff; --text:#12161e; --muted:#5a6577; --key:#6a7380;\n    --chip-bg:rgba(0,0,0,.04); --chip-brd:rgba(0,0,0,.10);\n    --zebra:rgba(0,0,0,.035); --accent:#1060ff;\n    --shadow:0 8px 24px rgba(0,0,0,.08);\n    --btn-bg:#eef1f6; --btn-brd:#dfe5ee; --btn-t:#101318;\n    --box-bg:#f8fafc; --box-brd:#e7ecf2;\n  }\n  html,body{background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;}\n  .wrap{max-width:1100px;margin:28px auto;padding:0 16px;}\n  .title-card{display:grid; place-items:center; margin:18px 0 14px;}\n  .title-badge{min-width:280px; max-width:520px; background:var(--panel); border:1px solid var(--chip-brd); border-radius:16px; padding:18px 24px; text-align:center; box-shadow:var(--shadow)}\n  .title-badge h1{margin:0 0 6px 0;font-size:28px}\n  .subtitle{color:var(--muted);font-size:14px}\n  .bar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}\n  .btns{display:flex;gap:8px}\n  .btn{background:var(--btn-bg);border:1px solid var(--btn-brd);color:var(--btn-t);padding:8px 12px;border-radius:10px;cursor:pointer;text-decoration:none}\n  .btn:hover{filter:brightness(1.05)}\n  .index{background:var(--panel);border:1px solid var(--chip-brd);padding:14px;border-radius:14px;display:flex;flex-wrap:wrap;gap:10px;box-shadow:var(--shadow)}\n  .chip{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;color:#fff;text-decoration:none;border:1px solid var(--chip-brd); background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2));}\n  .t-light .chip{color:#111}\n  .section{margin:26px 0; break-inside:avoid}\n  .section-title{font-size:20px;margin:0 0 12px;display:flex;align-items:center;gap:10px}\n  .section-title .dot{width:18px;height:18px;border-radius:50%; background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2)); box-shadow:0 6px 18px rgba(0,0,0,.25)}\n  .card{background:var(--panel);border:1px solid var(--chip-brd);border-radius:14px;padding:14px;margin:12px 0;box-shadow:var(--shadow); break-inside:avoid}\n  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;padding:10px;border-radius:10px}\n  .row:nth-child(even){background:var(--zebra)}\n  .row .k{color:var(--key)}\n  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--p1),var(--p2));font-weight:600}\n  table.kv{width:100%;border-collapse:collapse; font-size:12px}\n  table.kv tr>td{vertical-align:top;padding:8px 10px;border-top:1px solid var(--chip-brd)}\n  table.kv tr:first-child>td{border-top:none}\n  table.kv td.k{width:80px !important}\n  table.kv td.v{min-width:0}\n  .scalar{white-space:normal; overflow-wrap:anywhere; word-break:normal}\n  .empty,.null,.muted{color:var(--muted)}\n  details.box{background:var(--box-bg); border:1px solid var(--box-brd); border-radius:12px; margin:8px 0}\n  details.box > summary{list-style:none; cursor:pointer; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; user-select:none; color:var(--text)}\n  details.box > summary::-webkit-details-marker{display:none}\n  .caret{display:inline-block; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--muted); transition:transform .15s ease}\n  details[open] > summary .caret{transform:rotate(180deg)}\n  .box-inner{padding:6px 8px 10px}\n  .titlepage{display:none}\n  @media print{\n    .no-print{display:none !important}\n    .wrap{max-width:100%}\n    .section-title .dot{display:none}\n    .bar{display:none}\n    .titlepage{display:grid; place-items:center; height:100vh}\n    .title-badge{box-shadow:none}\n    h2.section-title{break-after:avoid}\n    .card{break-inside:avoid}\n  }\n</style>\n</head>\n<body>\n  <div class=\"wrap\">\n    <div class=\"title-card no-print\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </div>\n    <div class=\"bar no-print\">\n      <div class=\"subtitle\">Indice</div>\n      <div class=\"btns\">\n        <a class=\"btn\" href=\"http://localhost:5679/noa/pdf?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download PDF</a>\n        <a class=\"btn\" href=\"http://localhost:5679/noa/docx?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download DOCX</a>\n        <button class=\"btn\" onclick=\"window.print()\">Stampa</button>\n      </div>\n    </div>\n    <nav class=\"index no-print\">\n      ${sectionsOrder.map(sec => chipIndexHTML(sec)).join('')}\n    </nav>\n    <section class=\"titlepage\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </section>\n    ${sectionsOrder.map(sec => sectionHTML(sec, bySection[sec], theme)).join('')}\n  </div>\n  <script id=\"noaStore\" type=\"application/json\">${embedded}</script>\n  <script>\n    (function(){\n      const openBefore = new WeakMap();\n      function openAll(){\n        document.querySelectorAll('details').forEach(d => {\n          openBefore.set(d, d.open);\n          d.open = true;\n        });\n      }\n      function restore(){\n        document.querySelectorAll('details').forEach(d => {\n          const was = openBefore.get(d);\n          if (was === false) d.open = false;\n        });\n      }\n      window.addEventListener('beforeprint', openAll);\n      window.addEventListener('afterprint', restore);\n    })();\n  </script>\n</body>\n</html>`;\n}\n\n// Output\nconst html_dark  = buildHTML('dark');\nconst html_light = buildHTML('light');\nreturn [{ json: { name, slug, store, html_dark, html_light } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7504,
+        7776
+      ],
+      "id": "344708c4-7d81-48b7-9027-71fc24e97bc8",
+      "name": "Render HTML6"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a5e2846-281c-4719-a7dd-4445273cc375",
+              "leftValue": "={{$binary.data !== undefined}}",
+              "rightValue": "={{$binary.data}})",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        6144,
+        8000
+      ],
+      "id": "a4c23104-d363-4c5c-8eeb-b4f9079360eb",
+      "name": "If13"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "=html",
+        "options": {
+          "encoding": "utf8"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        6352,
+        7904
+      ],
+      "id": "3d5bd97c-ddf7-4a72-a56c-83970f412f13",
+      "name": "Extract from File6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf5f1cf9-6e08-43be-bfa9-d3bb432551b2",
+              "name": "store",
+              "value": "={{[]}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        6352,
+        8096
+      ],
+      "id": "7204fe08-2187-4a20-9042-18fb73e8f534",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        6656,
+        8016
+      ],
+      "id": "badbd8c3-9aaa-46d0-ac6c-e5f4a1187a1a",
+      "name": "MergeStore6",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        6928,
+        7776
+      ],
+      "id": "6a151e22-6a4f-498d-aadf-8b07e878f43d",
+      "name": "MergeFinale6",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        8208,
+        7472
+      ],
+      "id": "0b75b933-459a-4425-b1a4-3985e48b3156",
+      "name": "Read/Write Files from Disk12"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7520,
+        7456
+      ],
+      "id": "12f97ae1-531a-4a49-87c7-4aed2750929a",
+      "name": "Name18",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        8000,
+        7472
+      ],
+      "id": "62bd32e1-c560-4bd8-9ce4-f63e5776e821",
+      "name": "Merge24"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_dark.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        8224,
+        8080
+      ],
+      "id": "25ac8d41-6f6c-4846-8c65-ab758d5b17a0",
+      "name": "Read/Write Files from Disk13"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        7504,
+        8096
+      ],
+      "id": "81b3e6fa-d1e9-4322-8d32-727202a11cb7",
+      "name": "Name19",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "={{ $json.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b55c0442-db9d-4cab-981a-996c91101408"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        7296,
+        7776
+      ],
+      "id": "e4fa203b-def1-4837-848d-026482c2d523",
+      "name": "Switch6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $json.html || '';\nconst m = html.match(/<script\\s+id=\"noaStore\"\\s+type=\"application\\/json\">\\s*([\\s\\S]*?)\\s*<\\/script>/i);\nlet prev = { name: $json.name, slug: $json.slug, store: [] };\nif (m) {\n  try { prev = JSON.parse(m[1]); } catch (e) {}\n}\nreturn [{ json: prev }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6496,
+        7904
+      ],
+      "id": "0e078628-53a1-4464-a3df-b99965b1c34a",
+      "name": "ParseStore6"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "=html_light",
+        "options": {
+          "fileName": "report_light.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        7776,
+        7680
+      ],
+      "id": "34a19d51-2430-4424-b764-c36981c3c2fb",
+      "name": "Convert Light6"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html_dark",
+        "options": {
+          "fileName": "report_dark.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        7776,
+        7904
+      ],
+      "id": "4b98a055-a828-4c65-8858-6424630d64e7",
+      "name": "Convert Dark6"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        8000,
+        8080
+      ],
+      "id": "398acacb-e3fd-4263-bf4a-12f483e829a0",
+      "name": "Merge25"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "424fd9b2-4e4b-49a2-beeb-7e1aaaf3d1f4",
+              "name": "Section",
+              "value": "={{ $json.body.section || 'GEOINT' }}",
+              "type": "string"
+            },
+            {
+              "id": "f9c7c622-ce9c-4da1-b3ed-02407e728520",
+              "name": "Save",
+              "value": "={{ $json.body.meta?.save || false }}",
+              "type": "string"
+            },
+            {
+              "id": "afdb0652-05ea-4b46-8e59-dd3e6d192015",
+              "name": "ReportName",
+              "value": "={{ ($json.body.meta?.name || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3072,
+        8448
+      ],
+      "id": "1e648c7e-1d18-46c9-be21-da2f16f83293",
+      "name": "Name30"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "9h0xELLj35DxatxM",
+          "mode": "list",
+          "cachedResultName": "NOA - Get API Key"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        3072,
+        8128
+      ],
+      "id": "f69a8611-d9fa-49ed-9bab-9c1418a001fd",
+      "name": "Call 'NOA - Get API Key'"
+    },
+    {
+      "parameters": {
+        "content": "## GEOINT",
+        "height": 4112,
+        "width": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4032,
+        5888
+      ],
+      "typeVersion": 1,
+      "id": "866d1dfe-833d-4a4d-9509-390d88696759",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.provider }}",
+                    "rightValue": "iqair",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "4690d32d-b75e-44cd-b5ad-77038dbe56e2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "iqair"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c3e8ea8f-fa2b-4d04-9e55-e61bc22f7250",
+                    "leftValue": "={{ $json.provider }}",
+                    "rightValue": "geocode",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "geocode"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9910ca34-9867-4e16-9745-f130b1e3fd26",
+                    "leftValue": "={{ $json.provider }}",
+                    "rightValue": "theipapi",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "theipapi"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "408f0657-9733-4628-a2b8-e27976efeba8",
+                    "leftValue": "={{ $json.provider }}",
+                    "rightValue": "zipcodestack",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "zipecodestack"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5717089e-172b-493c-9efd-886ecf94aaf1",
+                    "leftValue": "={{ $json.provider }}",
+                    "rightValue": "weatherapi",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "weatherapi"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        3520,
+        8448
+      ],
+      "id": "5ecbba81-284c-41d1-8911-914568257272",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1ac3f5c1-598c-4e40-8bef-1b2ce2d59d50",
+              "name": "Tool",
+              "value": "={{ $json.body.action }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3072,
+        7888
+      ],
+      "id": "63238ad6-2c59-41cd-ab25-1d8703bc2ccb",
+      "name": "Tool"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3312,
+        7904
+      ],
+      "id": "e367a804-2b00-403f-a72a-61c510e8011d",
+      "name": "Merge6"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Tool }}",
+                    "rightValue": "World Airports",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fc9b5b56-8f51-492e-a066-3e6d78626f35"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "World Airports"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f5a4bd48-efb9-4246-93f0-001cd55ec7f1",
+                    "leftValue": "={{ $json.Tool }}",
+                    "rightValue": "IATA Airports",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "IATA Airports"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "c01fbbac-c097-4c4a-843c-7b316c4b135d",
+                    "leftValue": "={{ $json.Tool }}",
+                    "rightValue": "Google Flights",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Google Flights"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fd4d18d4-feee-4d54-9a22-6630f0d5c0a9",
+                    "leftValue": "={{ $json.Tool }}",
+                    "rightValue": "Flight Fare Search",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Flight Fare Search"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bef02c99-a6fd-41b5-8d0d-8d07760689cc",
+                    "leftValue": "={{ $json.Tool }}",
+                    "rightValue": "Google Maps Extractor",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Google Maps Extractor"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "20e2952e-dae5-4823-8281-c89caeb347f0",
+                    "leftValue": "={{ $json.Tool }}",
+                    "rightValue": "Real-Time Glassdoor Data",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Real-Time Glassdoor Data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        3520,
+        7456
+      ],
+      "id": "aafa976e-9107-4361-9c23-3d232cd2b118",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "content": "## SUBWORKFLOW \n**NOA - Get API Key**",
+        "height": 368,
+        "width": 224,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3008,
+        8048
+      ],
+      "typeVersion": 1,
+      "id": "d0789121-a92d-45d1-bc6b-304361ac97e6",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "GEOINT",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "GEOINT - 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GEOINT": {
+      "main": [
+        [
+          {
+            "node": "Set provider (RapidApi)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tool",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (RapidApi)1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tool",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (RapidApi)2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tool",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (RapidApi)3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tool",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (RapidApi)4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tool",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (RapidApi)5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GEOINT - 1": {
+      "main": [
+        [
+          {
+            "node": "Set provider (iqair)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (geocode)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (theipapi)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (zipcodestack)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (weatherapi)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)1": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)2": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)3": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)4": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)5": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (iqair)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (weatherapi)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (geocode)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (theipapi)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (zipcodestack)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA - Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "World Airports": {
+      "main": [
+        [
+          {
+            "node": "Risultati15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool3": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati3": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool4": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati4": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool5": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati5": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool9": {
+      "main": [
+        [
+          {
+            "node": "Merge9",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati9": {
+      "main": [
+        [
+          {
+            "node": "Merge9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool10": {
+      "main": [
+        [
+          {
+            "node": "Merge10",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati10": {
+      "main": [
+        [
+          {
+            "node": "Merge10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool11": {
+      "main": [
+        [
+          {
+            "node": "Merge11",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati11": {
+      "main": [
+        [
+          {
+            "node": "Merge11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool12": {
+      "main": [
+        [
+          {
+            "node": "Merge12",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati12": {
+      "main": [
+        [
+          {
+            "node": "Merge12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool13": {
+      "main": [
+        [
+          {
+            "node": "Merge13",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati13": {
+      "main": [
+        [
+          {
+            "node": "Merge13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge15": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool15": {
+      "main": [
+        [
+          {
+            "node": "Merge15",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati15": {
+      "main": [
+        [
+          {
+            "node": "Merge15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "iqair": {
+      "main": [
+        [
+          {
+            "node": "Risultati9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "geocode": {
+      "main": [
+        [
+          {
+            "node": "Risultati10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "theipapi": {
+      "main": [
+        [
+          {
+            "node": "Risultati11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "zipcodestack": {
+      "main": [
+        [
+          {
+            "node": "Risultati12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "weatherapi": {
+      "main": [
+        [
+          {
+            "node": "Risultati13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Real-Time Glassdoor Data": {
+      "main": [
+        [
+          {
+            "node": "Risultati5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Maps Extractor": {
+      "main": [
+        [
+          {
+            "node": "Risultati4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flight Fare Search": {
+      "main": [
+        [
+          {
+            "node": "Risultati3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IATA Airports": {
+      "main": [
+        [
+          {
+            "node": "Risultati1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Flights": {
+      "main": [
+        [
+          {
+            "node": "Risultati2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Report Item6": {
+      "main": [
+        [
+          {
+            "node": "If12",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keep entry6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If12": {
+      "main": [
+        [
+          {
+            "node": "Load report.json1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load report.json1": {
+      "main": [
+        [
+          {
+            "node": "If13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep entry6": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append & Build Store6": {
+      "main": [
+        [
+          {
+            "node": "Render HTML6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render HTML6": {
+      "main": [
+        [
+          {
+            "node": "Convert Light6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert Dark6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If13": {
+      "main": [
+        [
+          {
+            "node": "Extract from File6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File6": {
+      "main": [
+        [
+          {
+            "node": "ParseStore6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "MergeStore6",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeStore6": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale6",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeFinale6": {
+      "main": [
+        [
+          {
+            "node": "Append & Build Store6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name18": {
+      "main": [
+        [
+          {
+            "node": "Merge24",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge24": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name19": {
+      "main": [
+        [
+          {
+            "node": "Merge25",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch6": {
+      "main": [
+        [
+          {
+            "node": "Name18",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name19",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ParseStore6": {
+      "main": [
+        [
+          {
+            "node": "MergeStore6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Light6": {
+      "main": [
+        [
+          {
+            "node": "Merge24",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Convert Dark6": {
+      "main": [
+        [
+          {
+            "node": "Merge25",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge25": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge9": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge10": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge11": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge12": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge13": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name30": {
+      "main": [
+        [
+          {
+            "node": "Merge9",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge10",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge11",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge13",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge12",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge15",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk12": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk13": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'NOA - Get API Key'": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "iqair",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool9",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "geocode",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool10",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "theipapi",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool11",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "zipcodestack",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool12",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "weatherapi",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "World Airports",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool15",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "IATA Airports",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Flights",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flight Fare Search",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Maps Extractor",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Real-Time Glassdoor Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e3434934-f888-4dca-8c58-75e570648760",
+  "meta": {
+    "instanceId": "9b19530b87a6109db15235fa77369a50d44da1105471d3f120910429e0e04e14"
+  },
+  "id": "QyBmeM8belU1HHHT",
+  "tags": []
+}

@@ -1,0 +1,181 @@
+{
+  "name": "NOA – DOCX",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "noa/docx",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1104,
+        736
+      ],
+      "name": "Webhook (DOCX)",
+      "id": "f8d902f9-18ba-4a25-b917-92544aa4a6d3",
+      "webhookId": "f49417e0-2d62-4f92-b4bf-a4830c90473e"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.file }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1536,
+        736
+      ],
+      "name": "Read HTML (disk)",
+      "id": "3d958348-f8bc-4839-8f45-5a768bd35745"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://html2docx:5005/convert",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "filename",
+              "value": "={{$binary.data.fileName || 'report_light.html'}}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "docx"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1744,
+        736
+      ],
+      "name": "HTML → DOCX",
+      "id": "29934c96-a53b-4c53-97da-e19e78201645"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.query?.name ?? 'report';\nconst name = String(raw).trim();\nconst safe = name.replace(/[^a-z0-9-_]/gi, '-').replace(/-+/g, '-');\nconst theme = 'light';\nconst file = `/data/reports/${safe}_${theme}.html`;\nconst filename = `${safe}.docx`;\nreturn [{ json: { name: safe, file, filename } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        736
+      ],
+      "name": "Normalizza Input (DOCX)1",
+      "id": "be96bc64-f9a4-4832-9d32-9e5f96cf1d21"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "inputFieldName": "docx",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              },
+              {
+                "name": "Content-Disposition",
+                "value": "=attachment; filename=\"{{$binary.docx.fileName?.replace('.html','.docx') || ($json.name || 'report') + '.docx'}}\""
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1952,
+        736
+      ],
+      "name": "Respond DOCX",
+      "id": "898c0c14-5921-4d2d-8da5-65969fddde23"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook (DOCX)": {
+      "main": [
+        [
+          {
+            "node": "Normalizza Input (DOCX)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read HTML (disk)": {
+      "main": [
+        [
+          {
+            "node": "HTML → DOCX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML → DOCX": {
+      "main": [
+        [
+          {
+            "node": "Respond DOCX",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizza Input (DOCX)1": {
+      "main": [
+        [
+          {
+            "node": "Read HTML (disk)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "356beea5-36ad-4743-962e-4b8f5378727f",
+  "meta": {
+    "instanceId": "6bd339f911a3c4d63129180a1951c103a2f0d148fb90c68d610c30dfde901589"
+  },
+  "id": "Bi4aJElBVwHRIbRI",
+  "tags": []
+}

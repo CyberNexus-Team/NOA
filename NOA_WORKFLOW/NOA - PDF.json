@@ -1,0 +1,230 @@
+{
+  "name": "PDF",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "noa/pdf",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "34725bfc-21bf-4c29-a283-52d0ba830fa3",
+      "name": "Webhook",
+      "webhookId": "bc5a14cc-61a5-4d04-a29e-a9b2d95623d4"
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{$json.file}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        384,
+        0
+      ],
+      "id": "b9167f8b-0c69-4dfe-9afe-7a94c3245678",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://gotenberg:3000/forms/chromium/convert/html",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/pdf"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "files",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "printBackground",
+              "value": "true"
+            },
+            {
+              "name": "preferCssPageSize",
+              "value": "true"
+            },
+            {
+              "name": "marginTop",
+              "value": "12mm"
+            },
+            {
+              "name": "marginRight",
+              "value": "12mm"
+            },
+            {
+              "name": "marginBottom",
+              "value": "14mm"
+            },
+            {
+              "name": "marginLeft",
+              "value": "12mm"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "pdf"
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        784,
+        0
+      ],
+      "id": "94f848f0-58a5-4f42-8b2d-349237c7b662",
+      "name": "Gotenberg"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "inputFieldName": "pdf",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/pdf"
+              },
+              {
+                "name": "Content-Disposition",
+                "value": "=inline; filename=\"{{ $json.filename || 'report.pdf' }}\""
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        960,
+        0
+      ],
+      "id": "ad448a2d-1e99-461e-99c3-69ff5b60f072",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const name = ($json.query?.name || 'report').toString().trim();\nconst theme = ($json.query?.theme || 'light').toLowerCase()==='dark' ? 'dark' : 'light';\nconst file = `/data/reports/${name}_${theme}.html`;\nreturn [{ json: { name, theme, file } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ff482ff9-66ff-4924-8d53-654d83d65724",
+      "name": "Normalizza Input"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Inietta CSS di stampa \"bello\" + rinomina il binario in index.html per Gotenberg\nconst PRINT_CSS = `\n<style id=\"pdf-print-style\">\n  :root{\n    --bg:#ffffff; --paper:#ffffff; --text:#0f172a; --muted:#64748b; --subtle:#8a94a6;\n    --border:#e6ebf2; --border-strong:#d9e0ea; --accent:#0ea5e9; --zebra:#f9fbff;\n    --shadow:0 4px 16px rgba(2,6,23,.08);\n  }\n  @page { size: A4; margin: 12mm 12mm 14mm 12mm; }\n  html,body{height:auto!important}\n  body{\n    font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", \"Liberation Sans\", sans-serif;\n    font-size: 12pt; line-height: 1.5; color: var(--text); background: var(--bg);\n    -webkit-print-color-adjust: exact; print-color-adjust: exact;\n  }\n\n  /* layout */\n  .wrap{max-width: 920px; margin: 0 auto;}\n  .no-print, .btns, .btn { display: none !important; }\n  .section{margin: 18pt 0; break-inside: avoid; page-break-inside: avoid;}\n\n  /* title / meta */\n  .title-card{\n    background: var(--paper); border:1px solid var(--border); border-radius: 18px;\n    padding: 18pt; box-shadow: var(--shadow); margin: 8pt 0 18pt;\n  }\n  h1{font-size: 28pt; margin: 0 0 6pt; letter-spacing:.2px}\n  .subtitle,.meta{color:var(--muted); font-size:10.5pt}\n\n  /* generic cards */\n  .card{\n    background: var(--paper); border:1px solid var(--border); border-radius: 14px;\n    padding: 12pt 12pt; box-shadow: 0 2px 6px rgba(2,6,23,.05); margin: 12pt 0;\n  }\n\n  /* badge/chip */\n  .badge,.chip{\n    display:inline-block; padding:2pt 6pt; border-radius:999px; font-weight:600; font-size:9.5pt;\n    background:#eaf3ff; color:#0b63ce;\n  }\n\n  /* tables — key/value look */\n  table{width:100%; border-collapse: collapse; margin: 10pt 0; background: var(--paper);\n        border:1px solid var(--border); border-radius:12px; overflow:hidden;}\n  thead th{\n    background:#f5f8fd; color:#0b1a34; font-weight:700; font-size:10.8pt; text-transform:uppercase; letter-spacing:.4px;\n    border-bottom:1px solid var(--border-strong);\n    padding:8pt 10pt;\n  }\n  tbody tr{background: #fff;}\n  tbody tr:nth-child(odd){ background: var(--zebra); }\n  th, td{padding:8pt 10pt; vertical-align:top; border-top:1px solid var(--border);}\n  tbody tr:first-child th, tbody tr:first-child td{border-top:0}\n\n  /* 1ª colonna = etichetta; 2ª = valore */\n  tbody td:first-child, tbody th:first-child{\n    width:36%; color:var(--subtle); font-weight:600; text-transform:none; letter-spacing:.2px;\n  }\n  tbody td:last-child{\n    color:#0d1726; font-weight:600;\n  }\n\n  /* monospace per valori \"tecnici\" */\n  td:last-child code, td:last-child pre, td:last-child .mono{\n    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace;\n    font-size: 10.5pt; background: #f4f7fb; padding:2pt 4pt; border-radius:6px;\n  }\n\n  /* link \"puliti\" in stampa */\n  a[href]:after{content:\"\";}\n\n  /* gestione spezzature */\n  .card, table, .title-card{break-inside: avoid; page-break-inside: avoid;}\n  .break-before{break-before: page; page-break-before: always;}\n  .break-after{break-after: page; page-break-after: always;}\n</style>\n`;\n\nfor (const item of items) {\n  const bin = item.binary?.data;\n  if (!bin) throw new Error(\"Binary 'data' mancante dopo Read/Write Files.\");\n\n  const html = Buffer.from(bin.data, 'base64').toString('utf8');\n\n  // inietta CSS (una sola volta)\n  const withCss = html.includes('id=\"pdf-print-style\"')\n    ? html\n    : html.replace(/<\\/head>/i, PRINT_CSS + \"\\n</head>\");\n\n  // ricrea il binario come index.html per Gotenberg\n  const buffer = Buffer.from(withCss, 'utf8');\n  item.binary.data = await this.helpers.prepareBinaryData(buffer, 'index.html', 'text/html');\n}\nreturn items;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        592,
+        128
+      ],
+      "id": "f3db5e8b-d783-43f1-a241-3a015ec3fe42",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalizza Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gotenberg": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizza Input": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Gotenberg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e8a24320-05b8-48e2-8a22-407a8be52121",
+  "meta": {
+    "instanceId": "83265a1646004e18fc13a4f7c31b42c5deef1d7442f2ba356adf6e5e3ee2cce2"
+  },
+  "id": "UnKrIgSPrkwxAwQd",
+  "tags": []
+}

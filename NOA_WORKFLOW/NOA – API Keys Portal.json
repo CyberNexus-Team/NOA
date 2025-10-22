@@ -1,0 +1,239 @@
+{
+  "name": "NOA – API Keys Portal",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "save-keys",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -480,
+        128
+      ],
+      "id": "356d2467-1ea4-485f-8d31-5ba0d83b7b98",
+      "name": "Webhook",
+      "webhookId": "74d3e826-2911-456b-a5de-2b2f12ae6ac9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b366ca9e-b01a-444b-85e1-1d28427b768f",
+              "name": "userId",
+              "value": "={{$json.body?.userId || 'default'}}",
+              "type": "string"
+            },
+            {
+              "id": "868319ee-7d73-4c5f-a1e1-752c43f3534e",
+              "name": "provider",
+              "value": "={{$json.body.service}}",
+              "type": "string"
+            },
+            {
+              "id": "751c7785-cacc-4f53-814a-964bc182da19",
+              "name": "apiKey",
+              "value": "={{$json.body.key}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        176
+      ],
+      "id": "7061c421-0091-4e69-a200-47891642e00a",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO api_keys (user_id, provider, api_key, updated_at)\nVALUES ('{{$json.userId}}','{{$json.provider}}','{{$json.apiKey}}', CURRENT_TIMESTAMP)\nON DUPLICATE KEY UPDATE\n  api_key    = '{{$json.apiKey}}',\n  updated_at = CURRENT_TIMESTAMP",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        96,
+        176
+      ],
+      "id": "a5ed2ee0-0906-46d4-b353-d390ecdc30cc",
+      "name": "Upsert key",
+      "credentials": {
+        "mySql": {
+          "id": "oCnz6MBHNicYinyO",
+          "name": "NOA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        288,
+        64
+      ],
+      "id": "ed4e4083-efc0-4227-b609-ae411dd1f19f",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "deleteTable",
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "api_keys"
+        },
+        "deleteCommand": "delete",
+        "where": {
+          "values": [
+            {
+              "column": "api_key",
+              "condition": "IS NULL"
+            },
+            {
+              "column": "provider",
+              "value": "={{ $json.body.service }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e96982fd-26c2-441b-8a36-4d45ac5c74e0",
+      "name": "Delete key",
+      "credentials": {
+        "mySql": {
+          "id": "oCnz6MBHNicYinyO",
+          "name": "NOA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e06fd46e-099a-496e-bb1a-ae8235001424",
+              "leftValue": "={{$json.body.action}}",
+              "rightValue": "=delete",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        128
+      ],
+      "id": "c5d3d917-7d4f-4905-8454-570c165dbed7",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Upsert key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert key": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete key": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Delete key",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9b9007d9-8cb9-4c4c-9c23-615e006c251e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6bd339f911a3c4d63129180a1951c103a2f0d148fb90c68d610c30dfde901589"
+  },
+  "id": "qvQ260ZBeYDeGQHV",
+  "tags": []
+}

@@ -1,0 +1,5309 @@
+{
+  "name": "Tony - IMINT - Definitivo",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cb23b1f4-e035-482c-b0e2-fa81355311eb",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -4800,
+        1952
+      ],
+      "id": "47952690-d631-4b96-bf5e-84ec6089427c",
+      "name": "Webhook",
+      "webhookId": "1d18c0d0-ddee-4564-9a07-dd492f7431cc"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://face-detection13.p.rapidapi.com/face-detection",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "face-detection13.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{$json.body.data}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -640,
+        -624
+      ],
+      "id": "df7e9f2d-40e4-4b69-ab45-1bd300c8bd8b",
+      "name": "Face detection"
+    },
+    {
+      "parameters": {
+        "content": "## IMINT\nURL immagine\n\n",
+        "height": 256,
+        "width": 288,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4016,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "14864ac3-04b1-496a-8115-c8a6b6ac81b5",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "url": "https://reverse-image-search1.p.rapidapi.com/reverse-image-search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.body.data.split(',')[0].trim() }}"
+            },
+            {
+              "name": "limit",
+              "value": "={{ $json.body.data.split(',')[1].trim() || 20}}"
+            },
+            {
+              "name": "safe_search",
+              "value": "={{ $json.body.data.split(',')[2].trim() || blur}}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "reverse-image-search1.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -624,
+        272
+      ],
+      "id": "7b09049c-e896-4414-a7c9-543f0c83e6fe",
+      "name": "Reverse Image Search1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.api-ninjas.com/v1/imagetotext",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -320,
+        2592
+      ],
+      "id": "ac94a7ac-81c7-44ec-ae4b-9cd4f17ab6a9",
+      "name": "imagetotext"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.api-ninjas.com/v1/objectdetection",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -320,
+        3440
+      ],
+      "id": "b82d941d-aabf-472d-b492-33c9918e06ea",
+      "name": "objectdetection"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "FaceDetect",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3520,
+        2528
+      ],
+      "id": "6d6b0124-dba3-4514-b4e1-af18e7ed4e4f",
+      "name": "Set provider (Face Detection)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "ImageToText",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3520,
+        2736
+      ],
+      "id": "153b0968-1789-47ad-b365-477701eee5b2",
+      "name": "Set provider (Image To Text)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "ObjectDetection",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3520,
+        3168
+      ],
+      "id": "23fa4826-5c80-4adc-a575-c9ad8009a30e",
+      "name": "Set provider (Object Detection)"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.api-ninjas.com/v1/facedetect",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -400,
+        1680
+      ],
+      "id": "b2d0dab1-bce8-4d89-a7ac-70fbe656a83c",
+      "name": "facedetect"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -560,
+        2592
+      ],
+      "id": "aa40ea14-6e00-460e-996d-8f1e53d23c8f",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -560,
+        3440
+      ],
+      "id": "f2337558-1dc3-4a94-a848-df49ea9ddeab",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -640,
+        1680
+      ],
+      "id": "91321bb0-f0ea-463b-9837-9e4f42bf3769",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "83697a95-e8d3-4ccd-b78f-17fc5e026908",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "facedetect",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "FaceDetect"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2123196e-3b47-453d-9929-629b9f292471",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "imagetotext",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ImageToText"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1650b0a8-ed9e-4f04-8c9c-85a219d00ee2",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "objectdetection",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "ObjectDetection"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9bb59a89-084c-4cc1-87aa-dd48c969c1ee",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "Recognito",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Recognito"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -3952,
+        2928
+      ],
+      "id": "46078b0c-2956-4762-a258-03981c3c3689",
+      "name": "IMINT - 1"
+    },
+    {
+      "parameters": {
+        "content": "## IMINT \nInserisci immmagine **PNG o JPEG** ",
+        "height": 304,
+        "width": 320,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4032,
+        2848
+      ],
+      "id": "c55bd009-1bde-438b-ad48-2828f342ec0c",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3600,
+        240
+      ],
+      "id": "cc5ff4b8-7924-4ba0-b4da-e373a0340bd3",
+      "name": "Set provider (RapidApi)"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "=Reverse Image Search",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        432
+      ],
+      "id": "142dedf9-ab4c-4a30-a107-c4b43ea71731",
+      "name": "Input e Tool1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json.data}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        272
+      ],
+      "id": "a559a602-c1fd-4be5-b74f-dc77fa24da14",
+      "name": "Risultati1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{$json.body?.data || $json.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "={{ $json.provider}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -176,
+        1840
+      ],
+      "id": "29b25124-34f3-4f14-88dc-f9e0f42433c2",
+      "name": "Input e Tool2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -176,
+        1680
+      ],
+      "id": "6eab4a36-41c2-4db2-8a40-13c499ac116f",
+      "name": "Risultati2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "={{ $json.provider}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        2752
+      ],
+      "id": "66be2307-df81-4f57-8a03-dd551bd917d8",
+      "name": "Input e Tool3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        2592
+      ],
+      "id": "1beab103-66ff-4c1f-88ae-a6240a959e21",
+      "name": "Risultati3"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        192,
+        3520
+      ],
+      "id": "86c43185-c3ad-4a48-b839-1324a2106c1e",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "={{ $json.provider}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        3600
+      ],
+      "id": "fa7b8a55-66fc-4a06-86a7-44808626c29a",
+      "name": "Input e Tool4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        3440
+      ],
+      "id": "54fa13e2-5c52-44ea-beee-f4ea2991f664",
+      "name": "Risultati4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "=Face detection",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        -464
+      ],
+      "id": "3e3d2d89-3d8d-405f-9e10-dea1f26ffe35",
+      "name": "Input e Tool15"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -400,
+        -624
+      ],
+      "id": "1c841b21-ddb7-4640-9d42-260e4cc3c516",
+      "name": "Risultati15"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -112,
+        352
+      ],
+      "id": "44791e20-7f48-405c-8943-32cbcdbb0f2a",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        112,
+        1760
+      ],
+      "id": "4d74cca6-ccd6-4cf0-a07e-d7f38023df42",
+      "name": "Merge6"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        192,
+        2672
+      ],
+      "id": "f4486a68-7d85-49a1-bc0f-78a72cda22c8",
+      "name": "Merge7"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -112,
+        -544
+      ],
+      "id": "cc8d0582-1bc0-4ee6-b2fc-998d73619177",
+      "name": "Merge16"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "nYYd8cigSv29Lzo0",
+          "mode": "list",
+          "cachedResultName": "NOA – Get API Key"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        -2032,
+        1440
+      ],
+      "id": "18fab18c-00ba-4d3e-b184-55a6f140cee2",
+      "name": "Call 'NOA – Get API Key'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3584,
+        512
+      ],
+      "id": "b10b90d4-f82a-4e98-8204-b1a7afd4af96",
+      "name": "Set provider (RapidApi)1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://recognito.p.rapidapi.com/api/compare_face",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "recognito.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "={{$json.key}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image1",
+              "inputDataFieldName": "file1"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "image2",
+              "inputDataFieldName": "file2"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -336,
+        4336
+      ],
+      "id": "8045a1da-1666-468c-9c8c-56442c412577",
+      "name": "Recognito"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d4b68941-68a4-480d-a869-13c290c3dd2c",
+              "name": "provider",
+              "value": "RapidApi",
+              "type": "string"
+            },
+            {
+              "id": "7ad64d53-dc1c-4fe3-9fd2-9a164d2e2dbf",
+              "name": "userId",
+              "value": "default",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3520,
+        3392
+      ],
+      "id": "d5728cdb-2bef-480b-aa87-8f47db58ed8c",
+      "name": "Set provider (RapidApi)29"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        208,
+        4384
+      ],
+      "id": "9ef6a5cd-0c4b-4fff-85e0-5b531e20df77",
+      "name": "Merge28"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4aa8afb1-99a9-4495-8a20-8fa7d5694667",
+              "name": "Input",
+              "value": "={{ $json.body.data}}",
+              "type": "string"
+            },
+            {
+              "id": "cdcfe4bb-9159-4456-b785-21ac3995f92a",
+              "name": "Tool",
+              "value": "Recognito",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        4464
+      ],
+      "id": "84d4f326-a1c0-4413-becc-45928e6d8684",
+      "name": "Input e Tool28"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68248c01-b9ba-446c-9bd1-b7bff5bae12c",
+              "name": "Risultati",
+              "value": "={{ $json}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -80,
+        4304
+      ],
+      "id": "d40b2217-5868-4f5d-8222-2a899c632177",
+      "name": "Risultati28"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -544,
+        4336
+      ],
+      "id": "350ce2e8-6d68-455a-bd1f-4b87a064c331",
+      "name": "Merge5"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "Face detection",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9d2c40c4-0e26-4f87-80c9-2f48843a1bd3"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Face detection"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "96c2d948-1f6d-4fd1-adc5-dbb4e8e1f4fe",
+                    "leftValue": "={{$json.body.action}}",
+                    "rightValue": "Reverse Image Search",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Reverse Image Search"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -3952,
+        400
+      ],
+      "id": "539d2eb6-7149-4169-9018-3356790f3d31",
+      "name": "IMINT2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "424fd9b2-4e4b-49a2-beeb-7e1aaaf3d1f4",
+              "name": "Section",
+              "value": "={{ $json.body.section || 'WEBINT' }}",
+              "type": "string"
+            },
+            {
+              "id": "f9c7c622-ce9c-4da1-b3ed-02407e728520",
+              "name": "Save",
+              "value": "={{ $json.body.meta?.save || false }}",
+              "type": "string"
+            },
+            {
+              "id": "afdb0652-05ea-4b46-8e59-dd3e6d192015",
+              "name": "ReportName",
+              "value": "={{ ($json.body.meta?.name || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2144,
+        400
+      ],
+      "id": "29f923cb-d543-44f7-a884-41303a72ffef",
+      "name": "Name40"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f12dfee7-eb3f-4bf9-9eb9-16c256602c64",
+              "name": "Tool",
+              "value": "={{$json.body.action}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2144,
+        576
+      ],
+      "id": "6e2f55ad-5cd1-48b6-96b0-715dc8653151",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1936,
+        576
+      ],
+      "id": "569a39b3-1b40-4c3d-ba93-e01401d8c329",
+      "name": "Merge8"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{$json.Tool}}",
+                    "rightValue": "Face detection",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f8a1c5a4-6e46-4792-a229-f3a3bc204ca5"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Face detection"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "56652096-9fb9-4d17-95cf-bfb8e581c73f",
+                    "leftValue": "={{$json.Tool}}",
+                    "rightValue": "Reverse Image Search",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Reverse Image Search"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1728,
+        576
+      ],
+      "id": "0389a39f-0af5-4dbb-ad8c-31a3fc4250cb",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ingress: campi Input, Tool, Risultati, Section, Save, ReportName\nconst nameRaw = ( $json.ReportName || '' ).trim();\nconst name = nameRaw || 'NOA Report';\nconst slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');\n\nconst entry = {\n  section: $json.Section || 'GEOINT',\n  tool: $json.Tool,\n  input: $json.Input,\n  result: $json.Risultati,\n  time: new Date().toISOString()\n};\n\nreturn [{ json: { entry, name, slug, save: !!$json.Save } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        304,
+        -64
+      ],
+      "id": "3d1fb931-98d2-493a-806c-cce3c6993b55",
+      "name": "Prepare Report Item"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "658ac9d0-d002-4dbe-88cd-047bc3282b0e",
+              "leftValue": "={{ $json.save }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        512,
+        -64
+      ],
+      "id": "a659a90b-a9f6-4bfd-9e02-b847e966e12c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        784,
+        -192
+      ],
+      "id": "aca4fae6-0211-4d06-bb7f-da7034bef7ff",
+      "name": "Load report.json",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        784,
+        -432
+      ],
+      "id": "a983470b-3384-446a-8a53-5cb263b0e38a",
+      "name": "Keep entry"
+    },
+    {
+      "parameters": {
+        "jsCode": "// entry viene da Prepare Report Item\nconst entry = $json.entry;\nconst store = Array.isArray($json.store) ? $json.store : [];\n\nconst item = {\n  ts: new Date().toISOString(),\n  section: entry.section,  // es. GEOINT / WEBINT ecc. se lo stai passando\n  tool: entry.tool,\n  input: entry.input,\n  result: entry.result\n};\n\nstore.unshift(item); // più recente in alto\n\nreturn [{\n  json: {\n    name: $json.name,\n    slug: $json.slug,\n    store\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1952,
+        -416
+      ],
+      "id": "afab1bfe-361e-4b3b-b118-1fa042dcb24f",
+      "name": "Append & Build Store"
+    },
+    {
+      "parameters": {
+        "jsCode": "// === INPUT atteso ===\n// $json.name  -> es. \"Prova\"\n// $json.slug  -> es. \"prova\"\n// $json.store -> array di entry: [{ section, tool, input, result, time }, ...]\n\n// --------- Util ---------\nconst name = $json.name || 'Report';\nconst slug = $json.slug || 'report';\nconst store = Array.isArray($json.store) ? $json.store : [];\n\nfunction fmtUTC(d = new Date()) {\n  const iso = new Date(d).toISOString();\n  return iso.replace('T', ' ').replace('Z', ' UTC').split('.')[0];\n}\n\n//Palette sezione (coppie gradiente)\nconst palette = {\n  WEBINT: ['#1fcc7a', '#17a95f'],\n  SOCMINT: ['#ff6b6b', '#e14959'],\n  IMINT:  ['#ff9a44', '#ff6a00'],  // aggiornato: arancione\n  GEOINT: ['#2d8cff', '#1b6fe6'],\n  HUMINT: ['#ffd33d', '#f0b90b'],\n  'API KEY': ['#cfd6dd', '#e6ebf0'], // aggiornato: grigio chiaro\n};\n\n//schiarisci un HEX (0–100)\nfunction lighten(hex, pct = 28) {\n  const m = hex.replace('#', '');\n  const n = m.length === 3 ? m.split('').map(x => x + x).join('') : m;\n  const r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);\n  const mix = c => Math.round(c + (255 - c) * (pct/100));\n  const toHex = v => v.toString(16).padStart(2,'0');\n  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;\n}\n\n//raggruppo per sezione (in ordine di comparsa)\nconst bySection = {};\nconst sectionsOrder = [];\nfor (const e of store) {\n  const sec = e.section || 'ALTRO';\n  if (!bySection[sec]) { bySection[sec] = []; sectionsOrder.push(sec); }\n  if (!e.time) e.time = new Date();\n  bySection[sec].push(e);\n}\n\n// --------- Render helpers ---------\nfunction esc(s){\n  return String(s)\n    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');\n}\nfunction renderScalar(v){\n  return `<span class=\"scalar\">${esc(v)}</span>`;\n}\nfunction renderValue(v, depth = 0, labelForArray = '') {\n  if (v === null || v === undefined) return '<span class=\"null\">–</span>';\n  const t = typeof v;\n  if (t === 'string' || t === 'number' || t === 'boolean') return renderScalar(v);\n\n  //Array\n  if (Array.isArray(v)) {\n    if (!v.length) return '<span class=\"empty\">[]</span>';\n    const items = v.map((item, i) => `\n      <details class=\"box\" ${depth < 2 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : ''}[${i+1}]</summary>\n        <div class=\"box-inner\">\n          ${renderValue(item, depth+1)}\n        </div>\n      </details>\n    `).join('');\n    return `\n      <details class=\"box\" ${depth < 1 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : 'Array '}(${v.length})</summary>\n        <div class=\"box-inner\">${items}</div>\n      </details>\n    `;\n  }\n\n  //Oggetto\n  const entries = Object.entries(v);\n  if (!entries.length) return '<span class=\"empty\">{}</span>';\n  const rows = entries.map(([k,val]) => {\n    const valueHTML = Array.isArray(val)\n      ? renderValue(val, depth+1, k)\n      : renderValue(val, depth+1);\n    return `\n      <tr>\n        <td class=\"k\">${esc(k)}</td>\n        <td class=\"v\">${valueHTML}</td>\n      </tr>\n    `;\n  }).join('');\n  return `<table class=\"kv nest\">${rows}</table>`;\n}\n\nfunction chipIndexHTML(sec) {\n  const colors = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  return `<a class=\"chip\" href=\"#sec-${esc(sec)}\" style=\"--c1:${colors[0]};--c2:${colors[1]}\">${esc(sec)}</a>`;\n}\n\nfunction sectionHTML(sec, entries, theme='dark') {\n  const [c1, c2] = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  const c1soft = lighten(c1, 28), c2soft = lighten(c2, 28);\n  return `\n<section class=\"section\" id=\"sec-${esc(sec)}\">\n  <h2 class=\"section-title\" style=\"--c1:${c1};--c2:${c2}\"><span class=\"dot\"></span>${esc(sec)}</h2>\n  ${entries.map(e => `\n    <article class=\"card\">\n      <div class=\"row head\">\n        <div class=\"k\">Tool</div>\n        <div class=\"v tool\"><span class=\"pill\" style=\"--p1:${c1soft};--p2:${c2soft}\">${esc(e.tool || '—')}</span></div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Date</div>\n        <div class=\"v\">${e.time ? renderScalar(fmtUTC(e.time)) : '<span class=\"muted\">—</span>'}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Input</div>\n        <div class=\"v\">${renderValue(e.input)}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Risultato</div>\n        <div class=\"v\">${renderValue(e.result)}</div>\n      </div>\n    </article>\n  `).join('')}\n</section>`;\n}\n\n// --------- HTML builder ---------\nfunction buildHTML(theme='dark') {\n  const utcStamp = fmtUTC();\n  const embedded = JSON.stringify({ name, slug, store }).replace(/</g,'\\\\u003c');\n  return `<!doctype html>\n<html lang=\"it\" class=\"t-${theme}\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(name)} — Report</title>\n<style>\n  /* ====== Theme tokens ====== */\n  :root{\n    --bg:#0b0b0d; --panel:#141417; --text:#fff; --muted:#9aa1ac; --key:#a3a8b3;\n    --chip-bg:rgba(255,255,255,.06); --chip-brd:rgba(255,255,255,.16);\n    --zebra:rgba(255,255,255,.04); --accent:#2d8cff;\n    --shadow:0 10px 30px rgba(0,0,0,.35);\n    --btn-bg:#1c1e22; --btn-brd:#2a2d32; --btn-t:#fff;\n    --box-bg:#101114; --box-brd:#272a30;\n  }\n  .t-light{\n    --bg:#f6f8fb; --panel:#ffffff; --text:#12161e; --muted:#5a6577; --key:#6a7380;\n    --chip-bg:rgba(0,0,0,.04); --chip-brd:rgba(0,0,0,.10);\n    --zebra:rgba(0,0,0,.035); --accent:#1060ff;\n    --shadow:0 8px 24px rgba(0,0,0,.08);\n    --btn-bg:#eef1f6; --btn-brd:#dfe5ee; --btn-t:#101318;\n    --box-bg:#f8fafc; --box-brd:#e7ecf2;\n  }\n  html,body{background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;}\n  .wrap{max-width:1100px;margin:28px auto;padding:0 16px;}\n  .title-card{display:grid; place-items:center; margin:18px 0 14px;}\n  .title-badge{min-width:280px; max-width:520px; background:var(--panel); border:1px solid var(--chip-brd); border-radius:16px; padding:18px 24px; text-align:center; box-shadow:var(--shadow)}\n  .title-badge h1{margin:0 0 6px 0;font-size:28px}\n  .subtitle{color:var(--muted);font-size:14px}\n  .bar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}\n  .btns{display:flex;gap:8px}\n  .btn{background:var(--btn-bg);border:1px solid var(--btn-brd);color:var(--btn-t);padding:8px 12px;border-radius:10px;cursor:pointer;text-decoration:none}\n  .btn:hover{filter:brightness(1.05)}\n  .index{background:var(--panel);border:1px solid var(--chip-brd);padding:14px;border-radius:14px;display:flex;flex-wrap:wrap;gap:10px;box-shadow:var(--shadow)}\n  .chip{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;color:#fff;text-decoration:none;border:1px solid var(--chip-brd); background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2));}\n  .t-light .chip{color:#111}\n  .section{margin:26px 0; break-inside:avoid}\n  .section-title{font-size:20px;margin:0 0 12px;display:flex;align-items:center;gap:10px}\n  .section-title .dot{width:18px;height:18px;border-radius:50%; background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2)); box-shadow:0 6px 18px rgba(0,0,0,.25)}\n  .card{background:var(--panel);border:1px solid var(--chip-brd);border-radius:14px;padding:14px;margin:12px 0;box-shadow:var(--shadow); break-inside:avoid}\n  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;padding:10px;border-radius:10px}\n  .row:nth-child(even){background:var(--zebra)}\n  .row .k{color:var(--key)}\n  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--p1),var(--p2));font-weight:600}\n  table.kv{width:100%;border-collapse:collapse; font-size:12px}\n  table.kv tr>td{vertical-align:top;padding:8px 10px;border-top:1px solid var(--chip-brd)}\n  table.kv tr:first-child>td{border-top:none}\n  table.kv td.k{width:80px !important}\n  table.kv td.v{min-width:0}\n  .scalar{white-space:normal; overflow-wrap:anywhere; word-break:normal}\n  .empty,.null,.muted{color:var(--muted)}\n  details.box{background:var(--box-bg); border:1px solid var(--box-brd); border-radius:12px; margin:8px 0}\n  details.box > summary{list-style:none; cursor:pointer; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; user-select:none; color:var(--text)}\n  details.box > summary::-webkit-details-marker{display:none}\n  .caret{display:inline-block; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--muted); transition:transform .15s ease}\n  details[open] > summary .caret{transform:rotate(180deg)}\n  .box-inner{padding:6px 8px 10px}\n  .titlepage{display:none}\n  @media print{\n    .no-print{display:none !important}\n    .wrap{max-width:100%}\n    .section-title .dot{display:none}\n    .bar{display:none}\n    .titlepage{display:grid; place-items:center; height:100vh}\n    .title-badge{box-shadow:none}\n    h2.section-title{break-after:avoid}\n    .card{break-inside:avoid}\n  }\n</style>\n</head>\n<body>\n  <div class=\"wrap\">\n    <div class=\"title-card no-print\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </div>\n    <div class=\"bar no-print\">\n      <div class=\"subtitle\">Indice</div>\n      <div class=\"btns\">\n        <a class=\"btn\" href=\"http://localhost:5679/noa/pdf?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download PDF</a>\n        <a class=\"btn\" href=\"http://localhost:5679/noa/docx?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download DOCX</a>\n        <button class=\"btn\" onclick=\"window.print()\">Stampa</button>\n      </div>\n    </div>\n    <nav class=\"index no-print\">\n      ${sectionsOrder.map(sec => chipIndexHTML(sec)).join('')}\n    </nav>\n    <section class=\"titlepage\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </section>\n    ${sectionsOrder.map(sec => sectionHTML(sec, bySection[sec], theme)).join('')}\n  </div>\n  <script id=\"noaStore\" type=\"application/json\">${embedded}</script>\n  <script>\n    (function(){\n      const openBefore = new WeakMap();\n      function openAll(){\n        document.querySelectorAll('details').forEach(d => {\n          openBefore.set(d, d.open);\n          d.open = true;\n        });\n      }\n      function restore(){\n        document.querySelectorAll('details').forEach(d => {\n          const was = openBefore.get(d);\n          if (was === false) d.open = false;\n        });\n      }\n      window.addEventListener('beforeprint', openAll);\n      window.addEventListener('afterprint', restore);\n    })();\n  </script>\n</body>\n</html>`;\n}\n\n// Output\nconst html_dark  = buildHTML('dark');\nconst html_light = buildHTML('light');\nreturn [{ json: { name, slug, store, html_dark, html_light } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2336,
+        -416
+      ],
+      "id": "fbccb81e-116d-470f-a976-1a7d340e1902",
+      "name": "Render HTML"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a5e2846-281c-4719-a7dd-4445273cc375",
+              "leftValue": "={{$binary.data !== undefined}}",
+              "rightValue": "={{$binary.data}})",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        -192
+      ],
+      "id": "ca1eb283-c9ac-4dc1-b262-303df1fec590",
+      "name": "If14"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "=html",
+        "options": {
+          "encoding": "utf8"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1184,
+        -288
+      ],
+      "id": "5341e2a9-e8d8-4c66-9c63-5edb167011ca",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf5f1cf9-6e08-43be-bfa9-d3bb432551b2",
+              "name": "store",
+              "value": "={{[]}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1184,
+        -96
+      ],
+      "id": "822b7878-2dac-4566-b0d6-be0e4474bbff",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1488,
+        -176
+      ],
+      "id": "44fd770c-5de6-46a5-a845-cdb195c08c24",
+      "name": "MergeStore"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1760,
+        -416
+      ],
+      "id": "f6edb3df-0fba-40ea-907e-93e3329d1087",
+      "name": "MergeFinale"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        -720
+      ],
+      "id": "3ef3d896-3ba2-4c16-8741-703e4935f0df",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2352,
+        -736
+      ],
+      "id": "745d932e-7115-4627-bc6a-48fe28b4cc7e",
+      "name": "Name",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2832,
+        -720
+      ],
+      "id": "4b97029c-8956-433f-9d24-afdef3d93a8b",
+      "name": "Merge52"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_dark.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3056,
+        -112
+      ],
+      "id": "c0cd87bb-4ab7-43a3-8d18-7664632bbbfa",
+      "name": "Read/Write Files from Disk14"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2832,
+        -112
+      ],
+      "id": "547b9d2f-3802-4ee8-ba9c-ddf0b2cf4bdb",
+      "name": "Merge53"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2336,
+        -96
+      ],
+      "id": "727add81-a364-46c4-a6b5-c98fb29e033c",
+      "name": "Name28",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "={{ $json.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b55c0442-db9d-4cab-981a-996c91101408"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2128,
+        -416
+      ],
+      "id": "8c6d9278-a02b-493a-af3f-642fbe2ec082",
+      "name": "Switch8"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $json.html || '';\nconst m = html.match(/<script\\s+id=\"noaStore\"\\s+type=\"application\\/json\">\\s*([\\s\\S]*?)\\s*<\\/script>/i);\nlet prev = { name: $json.name, slug: $json.slug, store: [] };\nif (m) {\n  try { prev = JSON.parse(m[1]); } catch (e) {}\n}\nreturn [{ json: prev }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        -288
+      ],
+      "id": "e20dbd80-3849-47d6-945f-8ad30a6a4004",
+      "name": "ParseStore"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "=html_light",
+        "options": {
+          "fileName": "report_light.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2608,
+        -512
+      ],
+      "id": "0f2585bb-55f4-4505-959b-b872722a6dc3",
+      "name": "Convert Light"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html_dark",
+        "options": {
+          "fileName": "report_dark.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2608,
+        -288
+      ],
+      "id": "2b8af1fa-745c-4ba1-94bc-aa098b6f5feb",
+      "name": "Convert Dark"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "424fd9b2-4e4b-49a2-beeb-7e1aaaf3d1f4",
+              "name": "Section",
+              "value": "={{ $json.body.section || 'WEBINT' }}",
+              "type": "string"
+            },
+            {
+              "id": "f9c7c622-ce9c-4da1-b3ed-02407e728520",
+              "name": "Save",
+              "value": "={{ $json.body.meta?.save || false }}",
+              "type": "string"
+            },
+            {
+              "id": "afdb0652-05ea-4b46-8e59-dd3e6d192015",
+              "name": "ReportName",
+              "value": "={{ ($json.body.meta?.name || '').trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2080,
+        2992
+      ],
+      "id": "bfe2b544-32c0-417e-9626-ee60abe9d280",
+      "name": "Name41"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ingress: campi Input, Tool, Risultati, Section, Save, ReportName\nconst nameRaw = ( $json.ReportName || '' ).trim();\nconst name = nameRaw || 'NOA Report';\nconst slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');\n\nconst entry = {\n  section: $json.Section || 'GEOINT',\n  tool: $json.Tool,\n  input: $json.Input,\n  result: $json.Risultati,\n  time: new Date().toISOString()\n};\n\nreturn [{ json: { entry, name, slug, save: !!$json.Save } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        1776
+      ],
+      "id": "fbeded16-7379-44ff-a341-86fdddf48f2d",
+      "name": "Prepare Report Item1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "658ac9d0-d002-4dbe-88cd-047bc3282b0e",
+              "leftValue": "={{ $json.save }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        1776
+      ],
+      "id": "971c1c08-e572-497d-98da-e3360b8fed54",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        768,
+        1648
+      ],
+      "id": "bbfd9ff6-659c-4014-b096-325b6e83fcf3",
+      "name": "Load report.json1",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        1408
+      ],
+      "id": "7a39a420-e353-4d6e-8635-be3604b01995",
+      "name": "Keep entry1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// entry viene da Prepare Report Item\nconst entry = $json.entry;\nconst store = Array.isArray($json.store) ? $json.store : [];\n\nconst item = {\n  ts: new Date().toISOString(),\n  section: entry.section,  // es. GEOINT / WEBINT ecc. se lo stai passando\n  tool: entry.tool,\n  input: entry.input,\n  result: entry.result\n};\n\nstore.unshift(item); // più recente in alto\n\nreturn [{\n  json: {\n    name: $json.name,\n    slug: $json.slug,\n    store\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1936,
+        1424
+      ],
+      "id": "365750f2-f782-477d-b03b-8f2ce40dd532",
+      "name": "Append & Build Store1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// === INPUT atteso ===\n// $json.name  -> es. \"Prova\"\n// $json.slug  -> es. \"prova\"\n// $json.store -> array di entry: [{ section, tool, input, result, time }, ...]\n\n// --------- Util ---------\nconst name = $json.name || 'Report';\nconst slug = $json.slug || 'report';\nconst store = Array.isArray($json.store) ? $json.store : [];\n\n/* Normalizza input per mostrare immagini\n   - se Input è una stringa JSON, la parse\n   - se Input.base64 è senza prefisso, aggiunge \"data:<mime>;base64,\" */\nfor (const e of store) {\n  if (typeof e?.input === 'string') {\n    try { e.input = JSON.parse(e.input); } catch {}\n  }\n  const inp = e?.input;\n  if (inp && typeof inp === 'object' && inp.base64) {\n    if (!/^data:/.test(inp.base64)) {\n      const mime = inp.mime || 'image/png';\n      inp.base64 = `data:${mime};base64,${inp.base64}`;\n    }\n  }\n}\n\nfunction fmtUTC(d = new Date()) {\n  const iso = new Date(d).toISOString();\n  return iso.replace('T', ' ').replace('Z', ' UTC').split('.')[0];\n}\n\n//Palette sezione (coppie gradiente)\nconst palette = {\n  WEBINT: ['#1fcc7a', '#17a95f'],   // verde\n  SOCMINT: ['#ff6b6b', '#e14959'], // rosso\n  IMINT:  ['#ff9a44', '#ff6a00'],  // arancione (aggiornato)\n  GEOINT: ['#2d8cff', '#1b6fe6'],  // blu\n  HUMINT: ['#ffd33d', '#f0b90b'],  // giallo\n  'API KEY': ['#cfd6dd', '#e6ebf0'], // grigio chiaro (aggiornato)\n};\n\n//schiarisci un HEX (0–100)\nfunction lighten(hex, pct = 28) {\n  const m = hex.replace('#', '');\n  const n = m.length === 3 ? m.split('').map(x => x + x).join('') : m;\n  const r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);\n  const mix = c => Math.round(c + (255 - c) * (pct/100));\n  const toHex = v => v.toString(16).padStart(2,'0');\n  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;\n}\n\n//raggruppo per sezione (in ordine di comparsa)\nconst bySection = {};\nconst sectionsOrder = [];\nfor (const e of store) {\n  const sec = e.section || 'ALTRO';\n  if (!bySection[sec]) { bySection[sec] = []; sectionsOrder.push(sec); }\n  if (!e.time) e.time = new Date();\n  bySection[sec].push(e);\n}\n\n// --------- Render helpers ---------\nfunction esc(s){\n  return String(s)\n    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');\n}\n\n// riconosce data URL di immagine\nfunction isImageDataUrl(s){\n  return typeof s === 'string' && /^data:image\\/[a-zA-Z0-9.+-]+;base64,/.test(s);\n}\n\nfunction renderScalar(v){\n  // se è immagine, mostrala centrata e contenuta\n  if (isImageDataUrl(v)) {\n    return `<img src=\"${v}\" alt=\"image\" loading=\"lazy\" style=\"max-width:100%;height:auto;display:block;margin:8px auto;max-height:70vh;object-fit:contain;border-radius:12px;\">`;\n  }\n  return `<span class=\"scalar\">${esc(v)}</span>`;\n}\n\nfunction renderValue(v, depth = 0, labelForArray = '') {\n  if (v === null || v === undefined) return '<span class=\"null\">–</span>';\n  const t = typeof v;\n  if (t === 'string' || t === 'number' || t === 'boolean') return renderScalar(v);\n\n  //Array\n  if (Array.isArray(v)) {\n    if (!v.length) return '<span class=\"empty\">[]</span>';\n    const items = v.map((item, i) => `\n      <details class=\"box\" ${depth < 2 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : ''}[${i+1}]</summary>\n        <div class=\"box-inner\">\n          ${renderValue(item, depth+1)}\n        </div>\n      </details>\n    `).join('');\n    return `\n      <details class=\"box\" ${depth < 1 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : 'Array '}(${v.length})</summary>\n        <div class=\"box-inner\">${items}</div>\n      </details>\n    `;\n  }\n\n  //Oggetto\n  const entries = Object.entries(v);\n  if (!entries.length) return '<span class=\"empty\">{}</span>';\n  const rows = entries.map(([k,val]) => {\n    const valueHTML = Array.isArray(val)\n      ? renderValue(val, depth+1, k)\n      : renderValue(val, depth+1);\n    return `\n      <tr>\n        <td class=\"k\">${esc(k)}</td>\n        <td class=\"v\">${valueHTML}</td>\n      </tr>\n    `;\n  }).join('');\n  return `<table class=\"kv nest\">${rows}</table>`;\n}\n\nfunction chipIndexHTML(sec) {\n  const colors = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  return `<a class=\"chip\" href=\"#sec-${esc(sec)}\" style=\"--c1:${colors[0]};--c2:${colors[1]}\">${esc(sec)}</a>`;\n}\n\nfunction sectionHTML(sec, entries, theme='dark') {\n  const [c1, c2] = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  const c1soft = lighten(c1, 28), c2soft = lighten(c2, 28);\n  return `\n<section class=\"section\" id=\"sec-${esc(sec)}\">\n  <h2 class=\"section-title\" style=\"--c1:${c1};--c2:${c2}\"><span class=\"dot\"></span>${esc(sec)}</h2>\n  ${entries.map(e => `\n    <article class=\"card\">\n      <div class=\"row head\">\n        <div class=\"k\">Tool</div>\n        <div class=\"v tool\"><span class=\"pill\" style=\"--p1:${c1soft};--p2:${c2soft}\">${esc(e.tool || '—')}</span></div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Date</div>\n        <div class=\"v\">${e.time ? renderScalar(fmtUTC(e.time)) : '<span class=\"muted\">—</span>'}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Input</div>\n        <div class=\"v\">${renderValue(e.input)}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Risultato</div>\n        <div class=\"v\">${renderValue(e.result)}</div>\n      </div>\n    </article>\n  `).join('')}\n</section>`;\n}\n\n// --------- HTML builder ---------\nfunction buildHTML(theme='dark') {\n  const utcStamp = fmtUTC();\n  const embedded = JSON.stringify({ name, slug, store }).replace(/</g,'\\\\u003c');\n  return `<!doctype html>\n<html lang=\"it\" class=\"t-${theme}\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(name)} — Report</title>\n<style>\n  /* ====== Theme tokens ====== */\n  :root{\n    --bg:#0b0b0d; --panel:#141417; --text:#fff; --muted:#9aa1ac; --key:#a3a8b3;\n    --chip-bg:rgba(255,255,255,.06); --chip-brd:rgba(255,255,255,.16);\n    --zebra:rgba(255,255,255,.04); --accent:#2d8cff;\n    --shadow:0 10px 30px rgba(0,0,0,.35);\n    --btn-bg:#1c1e22; --btn-brd:#2a2d32; --btn-t:#fff;\n    --box-bg:#101114; --box-brd:#272a30;\n  }\n  .t-light{\n    --bg:#f6f8fb; --panel:#ffffff; --text:#12161e; --muted:#5a6577; --key:#6a7380;\n    --chip-bg:rgba(0,0,0,.04); --chip-brd:rgba(0,0,0,.10);\n    --zebra:rgba(0,0,0,.035); --accent:#1060ff;\n    --shadow:0 8px 24px rgba(0,0,0,.08);\n    --btn-bg:#eef1f6; --btn-brd:#dfe5ee; --btn-t:#101318;\n    --box-bg:#f8fafc; --box-brd:#e7ecf2;\n  }\n  html,body{background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;}\n  .wrap{max-width:1100px;margin:28px auto;padding:0 16px;}\n  .title-card{display:grid; place-items:center; margin:18px 0 14px;}\n  .title-badge{min-width:280px; max-width:520px; background:var(--panel); border:1px solid var(--chip-brd); border-radius:16px; padding:18px 24px; text-align:center; box-shadow:var(--shadow)}\n  .title-badge h1{margin:0 0 6px 0;font-size:28px}\n  .subtitle{color:var(--muted);font-size:14px}\n  .bar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}\n  .btns{display:flex;gap:8px}\n  .btn{background:var(--btn-bg);border:1px solid var(--btn-brd);color:var(--btn-t);padding:8px 12px;border-radius:10px;cursor:pointer;text-decoration:none}\n  .btn:hover{filter:brightness(1.05)}\n  .index{background:var(--panel);border:1px solid var(--chip-brd);padding:14px;border-radius:14px;display:flex;flex-wrap:wrap;gap:10px;box-shadow:var(--shadow)}\n  .chip{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;color:#fff;text-decoration:none;border:1px solid var(--chip-brd); background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2));}\n  .t-light .chip{color:#111}\n  .section{margin:26px 0; break-inside:avoid}\n  .section-title{font-size:20px;margin:0 0 12px;display:flex;align-items:center;gap:10px}\n  .section-title .dot{width:18px;height:18px;border-radius:50%; background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2)); box-shadow:0 6px 18px rgba(0,0,0,.25)}\n  .card{background:var(--panel);border:1px solid var(--chip-brd);border-radius:14px;padding:14px;margin:12px 0;box-shadow:var(--shadow); break-inside:avoid}\n  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;padding:10px;border-radius:10px}\n  .row:nth-child(even){background:var(--zebra)}\n  .row .k{color:var(--key)}\n  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--p1),var(--p2));font-weight:600}\n  table.kv{width:100%;border-collapse:collapse; font-size:12px}\n  table.kv tr>td{vertical-align:top;padding:8px 10px;border-top:1px solid var(--chip-brd)}\n  table.kv tr:first-child>td{border-top:none}\n  table.kv td.k{width:80px !important}\n  table.kv td.v{min-width:0}\n  .scalar{white-space:normal; overflow-wrap:anywhere; word-break:normal}\n  .empty,.null,.muted{color:var(--muted)}\n  details.box{background:var(--box-bg); border:1px solid var(--box-brd); border-radius:12px; margin:8px 0}\n  details.box > summary{list-style:none; cursor:pointer; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; user-select:none; color:var(--text)}\n  details.box > summary::-webkit-details-marker{display:none}\n  .caret{display:inline-block; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--muted); transition:transform .15s ease}\n  details[open] > summary .caret{transform:rotate(180deg)}\n  .box-inner{padding:6px 8px 10px}\n  .titlepage{display:none}\n  @media print{\n    .no-print{display:none !important}\n    .wrap{max-width:100%}\n    .section-title .dot{display:none}\n    .bar{display:none}\n    .titlepage{display:grid; place-items:center; height:100vh}\n    .title-badge{box-shadow:none}\n    h2.section-title{break-after:avoid}\n    .card{break-inside:avoid}\n  }\n</style>\n</head>\n<body>\n  <div class=\"wrap\">\n    <div class=\"title-card no-print\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </div>\n    <div class=\"bar no-print\">\n      <div class=\"subtitle\">Indice</div>\n      <div class=\"btns\">\n        <a class=\"btn\" href=\"http://localhost:5679/noa/pdf?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download PDF</a>\n        <a class=\"btn\" href=\"http://localhost:5679/noa/docx?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download DOCX</a>\n        <button class=\"btn\" onclick=\"window.print()\">Stampa</button>\n      </div>\n    </div>\n    <nav class=\"index no-print\">\n      ${sectionsOrder.map(sec => chipIndexHTML(sec)).join('')}\n    </nav>\n    <section class=\"titlepage\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </section>\n    ${sectionsOrder.map(sec => sectionHTML(sec, bySection[sec], theme)).join('')}\n  </div>\n  <script id=\"noaStore\" type=\"application/json\">${embedded}</script>\n  <script>\n    (function(){\n      const openBefore = new WeakMap();\n      function openAll(){\n        document.querySelectorAll('details').forEach(d => {\n          openBefore.set(d, d.open);\n          d.open = true;\n        });\n      }\n      function restore(){\n        document.querySelectorAll('details').forEach(d => {\n          const was = openBefore.get(d);\n          if (was === false) d.open = false;\n        });\n      }\n      window.addEventListener('beforeprint', openAll);\n      window.addEventListener('afterprint', restore);\n    })();\n  </script>\n</body>\n</html>`;\n}\n\n// Output\nconst html_dark  = buildHTML('dark');\nconst html_light = buildHTML('light');\nreturn [{ json: { name, slug, store, html_dark, html_light } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2320,
+        1424
+      ],
+      "id": "4afb838f-d30e-4bc6-9588-5c7f9d673039",
+      "name": "Render HTML1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a5e2846-281c-4719-a7dd-4445273cc375",
+              "leftValue": "={{$binary.data !== undefined}}",
+              "rightValue": "={{$binary.data}})",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        960,
+        1648
+      ],
+      "id": "51982d35-7a29-426b-9c1e-9ddb13bac200",
+      "name": "If15"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "=html",
+        "options": {
+          "encoding": "utf8"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        1552
+      ],
+      "id": "1abe3563-9dc8-417e-a55e-2260ac2179d3",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf5f1cf9-6e08-43be-bfa9-d3bb432551b2",
+              "name": "store",
+              "value": "={{[]}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1168,
+        1744
+      ],
+      "id": "3ef0ca63-da66-415e-99cd-a6fd6c4a40a7",
+      "name": "Edit Fields8"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1472,
+        1664
+      ],
+      "id": "cd93e3cb-3dce-4594-8a7e-49c436b40569",
+      "name": "MergeStore1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1744,
+        1424
+      ],
+      "id": "07dca113-2638-432e-9c23-b8bb544da2a2",
+      "name": "MergeFinale1"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3024,
+        1120
+      ],
+      "id": "ab48e835-f5bc-4829-98c1-cf797e2cf216",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2336,
+        1104
+      ],
+      "id": "194f70b1-06a1-40ae-a114-a362fdfdd200",
+      "name": "Name1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2816,
+        1120
+      ],
+      "id": "fb4b209c-365e-48f7-8156-a7d6b7fc628b",
+      "name": "Merge54"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_dark.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3040,
+        1728
+      ],
+      "id": "f69b8250-adb5-4dc4-bb23-8a357480aff5",
+      "name": "Read/Write Files from Disk15"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2816,
+        1728
+      ],
+      "id": "6c781557-9004-431e-b059-4b230119d451",
+      "name": "Merge55"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2320,
+        1744
+      ],
+      "id": "efe65fb5-eb42-4dfb-a61b-dc84624268e8",
+      "name": "Name29",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "={{ $json.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b55c0442-db9d-4cab-981a-996c91101408"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2112,
+        1424
+      ],
+      "id": "5708b27c-bc11-4354-8afa-4860b1fe79a5",
+      "name": "Switch9"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $json.html || '';\nconst m = html.match(/<script\\s+id=\"noaStore\"\\s+type=\"application\\/json\">\\s*([\\s\\S]*?)\\s*<\\/script>/i);\nlet prev = { name: $json.name, slug: $json.slug, store: [] };\nif (m) {\n  try { prev = JSON.parse(m[1]); } catch (e) {}\n}\nreturn [{ json: prev }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        1552
+      ],
+      "id": "40dee1e1-c161-48c6-97ad-842d710a847d",
+      "name": "ParseStore1"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "=html_light",
+        "options": {
+          "fileName": "report_light.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2592,
+        1328
+      ],
+      "id": "809c765d-f503-4217-9b8a-908bafc1c196",
+      "name": "Convert Light1"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html_dark",
+        "options": {
+          "fileName": "report_dark.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2592,
+        1552
+      ],
+      "id": "b15f6e88-db13-46bb-8b37-c681e25fb6c2",
+      "name": "Convert Dark1"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Accetta sia body.data.* che data.*\nconst src = $json.body?.data || $json.data || {};\nif (!src.base64) throw new Error('Manca base64 in body.data.base64 o data.base64');\n\nlet base64 = src.base64;\nlet mime = src.mime || 'image/jpeg';\n\n// Se è una data-URL, estrai mime e base64 \"pulita\"\nconst m = /^data:([^;]+);base64,(.+)$/s.exec(base64);\nif (m) { mime = src.mime || m[1]; base64 = m[2]; }\n\nconst fileName = src.filename || `image.${(mime.split('/')[1] || 'jpg').replace(/[^a-z0-9]/gi,'')}`;\n\nreturn {\n  json: $json,                // conserva tutto\n  binary: {\n    data: {                   // <-- NOME binario = data\n      data: base64,\n      mimeType: mime,\n      fileName,\n    }\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3360,
+        2528
+      ],
+      "id": "97434518-8ef7-4333-99ff-a183908f714a",
+      "name": "Base64 -> IMG"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Accetta sia body.data.* che data.*\nconst src = $json.body?.data || $json.data || {};\nif (!src.base64) throw new Error('Manca base64 in body.data.base64 o data.base64');\n\nlet base64 = src.base64;\nlet mime = src.mime || 'image/jpeg';\n\n// Se è una data-URL, estrai mime e base64 \"pulita\"\nconst m = /^data:([^;]+);base64,(.+)$/s.exec(base64);\nif (m) { mime = src.mime || m[1]; base64 = m[2]; }\n\nconst fileName = src.filename || `image.${(mime.split('/')[1] || 'jpg').replace(/[^a-z0-9]/gi,'')}`;\n\nreturn {\n  json: $json,                // conserva tutto\n  binary: {\n    data: {                   // <-- NOME binario = data\n      data: base64,\n      mimeType: mime,\n      fileName,\n    }\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3360,
+        2736
+      ],
+      "id": "1545976e-531e-49b7-8967-fc42770d8448",
+      "name": "Base64 -> IMG1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ingress: campi Input, Tool, Risultati, Section, Save, ReportName\nconst nameRaw = ( $json.ReportName || '' ).trim();\nconst name = nameRaw || 'NOA Report';\nconst slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');\n\nconst entry = {\n  section: $json.Section || 'GEOINT',\n  tool: $json.Tool,\n  input: $json.Input,\n  result: $json.Risultati,\n  time: new Date().toISOString()\n};\n\nreturn [{ json: { entry, name, slug, save: !!$json.Save } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        2688
+      ],
+      "id": "ba4a2e6c-3c53-44a8-97a6-ddaffe170097",
+      "name": "Prepare Report Item2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "658ac9d0-d002-4dbe-88cd-047bc3282b0e",
+              "leftValue": "={{ $json.save }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        2688
+      ],
+      "id": "75dac4d7-36e8-4a55-afcc-f46b6ca7ab4d",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        912,
+        2560
+      ],
+      "id": "0f71dc59-37d3-4313-ab06-e26d1017e0c6",
+      "name": "Load report.json2",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        912,
+        2320
+      ],
+      "id": "c9f308e0-41f6-4ad3-9dd0-a9695e032441",
+      "name": "Keep entry2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// entry viene da Prepare Report Item\nconst entry = $json.entry;\nconst store = Array.isArray($json.store) ? $json.store : [];\n\nconst item = {\n  ts: new Date().toISOString(),\n  section: entry.section,  // es. GEOINT / WEBINT ecc. se lo stai passando\n  tool: entry.tool,\n  input: entry.input,\n  result: entry.result\n};\n\nstore.unshift(item); // più recente in alto\n\nreturn [{\n  json: {\n    name: $json.name,\n    slug: $json.slug,\n    store\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        2336
+      ],
+      "id": "b17c6007-905d-43ce-8203-708f386fc767",
+      "name": "Append & Build Store2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// === INPUT atteso ===\n// $json.name  -> es. \"Prova\"\n// $json.slug  -> es. \"prova\"\n// $json.store -> array di entry: [{ section, tool, input, result, time }, ...]\n\n// --------- Util ---------\nconst name = $json.name || 'Report';\nconst slug = $json.slug || 'report';\nconst store = Array.isArray($json.store) ? $json.store : [];\n\n/* Normalizza input per mostrare immagini\n   - se Input è una stringa JSON, la parse\n   - se Input.base64 è senza prefisso, aggiunge \"data:<mime>;base64,\" */\nfor (const e of store) {\n  if (typeof e?.input === 'string') {\n    try { e.input = JSON.parse(e.input); } catch {}\n  }\n  const inp = e?.input;\n  if (inp && typeof inp === 'object' && inp.base64) {\n    if (!/^data:/.test(inp.base64)) {\n      const mime = inp.mime || 'image/png';\n      inp.base64 = `data:${mime};base64,${inp.base64}`;\n    }\n  }\n}\n\nfunction fmtUTC(d = new Date()) {\n  const iso = new Date(d).toISOString();\n  return iso.replace('T', ' ').replace('Z', ' UTC').split('.')[0];\n}\n\n//Palette sezione (coppie gradiente)\nconst palette = {\n  WEBINT: ['#1fcc7a', '#17a95f'],   // verde\n  SOCMINT: ['#ff6b6b', '#e14959'], // rosso\n  IMINT:  ['#ff9a44', '#ff6a00'],  // arancione (aggiornato)\n  GEOINT: ['#2d8cff', '#1b6fe6'],  // blu\n  HUMINT: ['#ffd33d', '#f0b90b'],  // giallo\n  'API KEY': ['#cfd6dd', '#e6ebf0'], // grigio chiaro (aggiornato)\n};\n\n//schiarisci un HEX (0–100)\nfunction lighten(hex, pct = 28) {\n  const m = hex.replace('#', '');\n  const n = m.length === 3 ? m.split('').map(x => x + x).join('') : m;\n  const r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);\n  const mix = c => Math.round(c + (255 - c) * (pct/100));\n  const toHex = v => v.toString(16).padStart(2,'0');\n  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;\n}\n\n//raggruppo per sezione (in ordine di comparsa)\nconst bySection = {};\nconst sectionsOrder = [];\nfor (const e of store) {\n  const sec = e.section || 'ALTRO';\n  if (!bySection[sec]) { bySection[sec] = []; sectionsOrder.push(sec); }\n  if (!e.time) e.time = new Date();\n  bySection[sec].push(e);\n}\n\n// --------- Render helpers ---------\nfunction esc(s){\n  return String(s)\n    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');\n}\n\n// riconosce data URL di immagine\nfunction isImageDataUrl(s){\n  return typeof s === 'string' && /^data:image\\/[a-zA-Z0-9.+-]+;base64,/.test(s);\n}\n\nfunction renderScalar(v){\n  // se è immagine, mostrala centrata e contenuta\n  if (isImageDataUrl(v)) {\n    return `<img src=\"${v}\" alt=\"image\" loading=\"lazy\" style=\"max-width:100%;height:auto;display:block;margin:8px auto;max-height:70vh;object-fit:contain;border-radius:12px;\">`;\n  }\n  return `<span class=\"scalar\">${esc(v)}</span>`;\n}\n\nfunction renderValue(v, depth = 0, labelForArray = '') {\n  if (v === null || v === undefined) return '<span class=\"null\">–</span>';\n  const t = typeof v;\n  if (t === 'string' || t === 'number' || t === 'boolean') return renderScalar(v);\n\n  //Array\n  if (Array.isArray(v)) {\n    if (!v.length) return '<span class=\"empty\">[]</span>';\n    const items = v.map((item, i) => `\n      <details class=\"box\" ${depth < 2 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : ''}[${i+1}]</summary>\n        <div class=\"box-inner\">\n          ${renderValue(item, depth+1)}\n        </div>\n      </details>\n    `).join('');\n    return `\n      <details class=\"box\" ${depth < 1 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : 'Array '}(${v.length})</summary>\n        <div class=\"box-inner\">${items}</div>\n      </details>\n    `;\n  }\n\n  //Oggetto\n  const entries = Object.entries(v);\n  if (!entries.length) return '<span class=\"empty\">{}</span>';\n  const rows = entries.map(([k,val]) => {\n    const valueHTML = Array.isArray(val)\n      ? renderValue(val, depth+1, k)\n      : renderValue(val, depth+1);\n    return `\n      <tr>\n        <td class=\"k\">${esc(k)}</td>\n        <td class=\"v\">${valueHTML}</td>\n      </tr>\n    `;\n  }).join('');\n  return `<table class=\"kv nest\">${rows}</table>`;\n}\n\nfunction chipIndexHTML(sec) {\n  const colors = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  return `<a class=\"chip\" href=\"#sec-${esc(sec)}\" style=\"--c1:${colors[0]};--c2:${colors[1]}\">${esc(sec)}</a>`;\n}\n\nfunction sectionHTML(sec, entries, theme='dark') {\n  const [c1, c2] = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  const c1soft = lighten(c1, 28), c2soft = lighten(c2, 28);\n  return `\n<section class=\"section\" id=\"sec-${esc(sec)}\">\n  <h2 class=\"section-title\" style=\"--c1:${c1};--c2:${c2}\"><span class=\"dot\"></span>${esc(sec)}</h2>\n  ${entries.map(e => `\n    <article class=\"card\">\n      <div class=\"row head\">\n        <div class=\"k\">Tool</div>\n        <div class=\"v tool\"><span class=\"pill\" style=\"--p1:${c1soft};--p2:${c2soft}\">${esc(e.tool || '—')}</span></div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Date</div>\n        <div class=\"v\">${e.time ? renderScalar(fmtUTC(e.time)) : '<span class=\"muted\">—</span>'}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Input</div>\n        <div class=\"v\">${renderValue(e.input)}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Risultato</div>\n        <div class=\"v\">${renderValue(e.result)}</div>\n      </div>\n    </article>\n  `).join('')}\n</section>`;\n}\n\n// --------- HTML builder ---------\nfunction buildHTML(theme='dark') {\n  const utcStamp = fmtUTC();\n  const embedded = JSON.stringify({ name, slug, store }).replace(/</g,'\\\\u003c');\n  return `<!doctype html>\n<html lang=\"it\" class=\"t-${theme}\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(name)} — Report</title>\n<style>\n  /* ====== Theme tokens ====== */\n  :root{\n    --bg:#0b0b0d; --panel:#141417; --text:#fff; --muted:#9aa1ac; --key:#a3a8b3;\n    --chip-bg:rgba(255,255,255,.06); --chip-brd:rgba(255,255,255,.16);\n    --zebra:rgba(255,255,255,.04); --accent:#2d8cff;\n    --shadow:0 10px 30px rgba(0,0,0,.35);\n    --btn-bg:#1c1e22; --btn-brd:#2a2d32; --btn-t:#fff;\n    --box-bg:#101114; --box-brd:#272a30;\n  }\n  .t-light{\n    --bg:#f6f8fb; --panel:#ffffff; --text:#12161e; --muted:#5a6577; --key:#6a7380;\n    --chip-bg:rgba(0,0,0,.04); --chip-brd:rgba(0,0,0,.10);\n    --zebra:rgba(0,0,0,.035); --accent:#1060ff;\n    --shadow:0 8px 24px rgba(0,0,0,.08);\n    --btn-bg:#eef1f6; --btn-brd:#dfe5ee; --btn-t:#101318;\n    --box-bg:#f8fafc; --box-brd:#e7ecf2;\n  }\n  html,body{background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;}\n  .wrap{max-width:1100px;margin:28px auto;padding:0 16px;}\n  .title-card{display:grid; place-items:center; margin:18px 0 14px;}\n  .title-badge{min-width:280px; max-width:520px; background:var(--panel); border:1px solid var(--chip-brd); border-radius:16px; padding:18px 24px; text-align:center; box-shadow:var(--shadow)}\n  .title-badge h1{margin:0 0 6px 0;font-size:28px}\n  .subtitle{color:var(--muted);font-size:14px}\n  .bar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}\n  .btns{display:flex;gap:8px}\n  .btn{background:var(--btn-bg);border:1px solid var(--btn-brd);color:var(--btn-t);padding:8px 12px;border-radius:10px;cursor:pointer;text-decoration:none}\n  .btn:hover{filter:brightness(1.05)}\n  .index{background:var(--panel);border:1px solid var(--chip-brd);padding:14px;border-radius:14px;display:flex;flex-wrap:wrap;gap:10px;box-shadow:var(--shadow)}\n  .chip{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;color:#fff;text-decoration:none;border:1px solid var(--chip-brd); background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2));}\n  .t-light .chip{color:#111}\n  .section{margin:26px 0; break-inside:avoid}\n  .section-title{font-size:20px;margin:0 0 12px;display:flex;align-items:center;gap:10px}\n  .section-title .dot{width:18px;height:18px;border-radius:50%; background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2)); box-shadow:0 6px 18px rgba(0,0,0,.25)}\n  .card{background:var(--panel);border:1px solid var(--chip-brd);border-radius:14px;padding:14px;margin:12px 0;box-shadow:var(--shadow); break-inside:avoid}\n  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;padding:10px;border-radius:10px}\n  .row:nth-child(even){background:var(--zebra)}\n  .row .k{color:var(--key)}\n  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--p1),var(--p2));font-weight:600}\n  table.kv{width:100%;border-collapse:collapse; font-size:12px}\n  table.kv tr>td{vertical-align:top;padding:8px 10px;border-top:1px solid var(--chip-brd)}\n  table.kv tr:first-child>td{border-top:none}\n  table.kv td.k{width:80px !important}\n  table.kv td.v{min-width:0}\n  .scalar{white-space:normal; overflow-wrap:anywhere; word-break:normal}\n  .empty,.null,.muted{color:var(--muted)}\n  details.box{background:var(--box-bg); border:1px solid var(--box-brd); border-radius:12px; margin:8px 0}\n  details.box > summary{list-style:none; cursor:pointer; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; user-select:none; color:var(--text)}\n  details.box > summary::-webkit-details-marker{display:none}\n  .caret{display:inline-block; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--muted); transition:transform .15s ease}\n  details[open] > summary .caret{transform:rotate(180deg)}\n  .box-inner{padding:6px 8px 10px}\n  .titlepage{display:none}\n  @media print{\n    .no-print{display:none !important}\n    .wrap{max-width:100%}\n    .section-title .dot{display:none}\n    .bar{display:none}\n    .titlepage{display:grid; place-items:center; height:100vh}\n    .title-badge{box-shadow:none}\n    h2.section-title{break-after:avoid}\n    .card{break-inside:avoid}\n  }\n</style>\n</head>\n<body>\n  <div class=\"wrap\">\n    <div class=\"title-card no-print\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </div>\n    <div class=\"bar no-print\">\n      <div class=\"subtitle\">Indice</div>\n      <div class=\"btns\">\n        <a class=\"btn\" href=\"http://localhost:5679/noa/pdf?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download PDF</a>\n        <a class=\"btn\" href=\"http://localhost:5679/noa/docx?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download DOCX</a>\n        <button class=\"btn\" onclick=\"window.print()\">Stampa</button>\n      </div>\n    </div>\n    <nav class=\"index no-print\">\n      ${sectionsOrder.map(sec => chipIndexHTML(sec)).join('')}\n    </nav>\n    <section class=\"titlepage\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </section>\n    ${sectionsOrder.map(sec => sectionHTML(sec, bySection[sec], theme)).join('')}\n  </div>\n  <script id=\"noaStore\" type=\"application/json\">${embedded}</script>\n  <script>\n    (function(){\n      const openBefore = new WeakMap();\n      function openAll(){\n        document.querySelectorAll('details').forEach(d => {\n          openBefore.set(d, d.open);\n          d.open = true;\n        });\n      }\n      function restore(){\n        document.querySelectorAll('details').forEach(d => {\n          const was = openBefore.get(d);\n          if (was === false) d.open = false;\n        });\n      }\n      window.addEventListener('beforeprint', openAll);\n      window.addEventListener('afterprint', restore);\n    })();\n  </script>\n</body>\n</html>`;\n}\n\n// Output\nconst html_dark  = buildHTML('dark');\nconst html_light = buildHTML('light');\nreturn [{ json: { name, slug, store, html_dark, html_light } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2464,
+        2336
+      ],
+      "id": "31aa6233-d8b9-43b5-bf72-64f463c01a0d",
+      "name": "Render HTML2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a5e2846-281c-4719-a7dd-4445273cc375",
+              "leftValue": "={{$binary.data !== undefined}}",
+              "rightValue": "={{$binary.data}})",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1104,
+        2560
+      ],
+      "id": "0101ce42-c51a-47cf-8f13-ab3090a18313",
+      "name": "If16"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "=html",
+        "options": {
+          "encoding": "utf8"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        2464
+      ],
+      "id": "1c768f8c-116a-469c-bdb9-662ccae77ab6",
+      "name": "Extract from File2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf5f1cf9-6e08-43be-bfa9-d3bb432551b2",
+              "name": "store",
+              "value": "={{[]}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        2656
+      ],
+      "id": "4acc2936-49bb-49de-9ee3-52215533efff",
+      "name": "Edit Fields9"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1616,
+        2576
+      ],
+      "id": "f3408d3b-7ea6-406a-8183-072e2f7f1275",
+      "name": "MergeStore2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1888,
+        2336
+      ],
+      "id": "af9c7316-306a-4428-9cc7-4dc5f2787750",
+      "name": "MergeFinale2"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3168,
+        2032
+      ],
+      "id": "bfd245d9-08a5-41d9-a089-8768e5b2ba23",
+      "name": "Read/Write Files from Disk2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2480,
+        2016
+      ],
+      "id": "81b322a4-2a23-4aeb-961b-d1a406b7d4ce",
+      "name": "Name2",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2960,
+        2032
+      ],
+      "id": "542d7c32-5c1b-450a-9008-9d4bec7ab427",
+      "name": "Merge56"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_dark.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3184,
+        2640
+      ],
+      "id": "a8d88bcb-c90d-480d-8f24-52bd235af3bb",
+      "name": "Read/Write Files from Disk16"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2960,
+        2640
+      ],
+      "id": "eaaf23a4-e070-489d-8ea6-2a7902ce2ac4",
+      "name": "Merge57"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2464,
+        2656
+      ],
+      "id": "a316a74e-d6b2-434d-aa33-c8e251e99e7f",
+      "name": "Name30",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "={{ $json.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b55c0442-db9d-4cab-981a-996c91101408"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2256,
+        2336
+      ],
+      "id": "8f61d52b-3e41-49ba-bfc4-2bd83a60cdf5",
+      "name": "Switch10"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $json.html || '';\nconst m = html.match(/<script\\s+id=\"noaStore\"\\s+type=\"application\\/json\">\\s*([\\s\\S]*?)\\s*<\\/script>/i);\nlet prev = { name: $json.name, slug: $json.slug, store: [] };\nif (m) {\n  try { prev = JSON.parse(m[1]); } catch (e) {}\n}\nreturn [{ json: prev }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        2464
+      ],
+      "id": "24edd3ad-06a5-445d-af58-b72f82c55bb9",
+      "name": "ParseStore2"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "=html_light",
+        "options": {
+          "fileName": "report_light.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2736,
+        2240
+      ],
+      "id": "f4fd874b-ae32-4465-b90d-994e99aea59c",
+      "name": "Convert Light2"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html_dark",
+        "options": {
+          "fileName": "report_dark.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2736,
+        2464
+      ],
+      "id": "fdb706c2-fc7e-4130-bde1-c9291134ccc6",
+      "name": "Convert Dark2"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Accetta sia body.data.* che data.*\nconst src = $json.body?.data || $json.data || {};\nif (!src.base64) throw new Error('Manca base64 in body.data.base64 o data.base64');\n\nlet base64 = src.base64;\nlet mime = src.mime || 'image/jpeg';\n\n// Se è una data-URL, estrai mime e base64 \"pulita\"\nconst m = /^data:([^;]+);base64,(.+)$/s.exec(base64);\nif (m) { mime = src.mime || m[1]; base64 = m[2]; }\n\nconst fileName = src.filename || `image.${(mime.split('/')[1] || 'jpg').replace(/[^a-z0-9]/gi,'')}`;\n\nreturn {\n  json: $json,                // conserva tutto\n  binary: {\n    data: {                   // <-- NOME binario = data\n      data: base64,\n      mimeType: mime,\n      fileName,\n    }\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3344,
+        3168
+      ],
+      "id": "c051abcf-abed-4e26-b353-31a146a62ba4",
+      "name": "Base64 -> IMG2"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Estrae due immagini (file1, file2) da body.data.* o data.*\nfunction normalize(fileObj) {\n  if (!fileObj) return null;\n\n  let base64 = fileObj.base64 || fileObj.b64 || fileObj.data;\n  let mime = fileObj.mime || fileObj.mimetype || fileObj.type || 'image/jpeg';\n  let fileName =\n    fileObj.filename || fileObj.fileName ||\n    `image.${(mime.split('/')[1] || 'jpg').replace(/[^a-z0-9]/gi, '')}`;\n\n  if (!base64) return null;\n\n  // Se arriva come data URL, separa mime e base64 pulito\n  const m = String(base64).match(/^data:([^;]+);base64,(.+)$/s);\n  if (m) { mime = fileObj.mime || m[1]; base64 = m[2]; }\n\n  return { base64, mime, fileName };\n}\n\n// Root dei dati\nconst root = $json.body?.data || $json.data || {};\n\n// Primi candidati: file1/file2 (come nel tuo input)\nlet f1 = normalize(root.file1);\nlet f2 = normalize(root.file2);\n\n// Fallback: altri alias comuni (image1/image2, source/target)\nif (!f1) f1 = normalize(root.image1) || normalize(root.source) || normalize(root.a);\nif (!f2) f2 = normalize(root.image2) || normalize(root.target) || normalize(root.b);\n\nif (!f1 || !f2) {\n  throw new Error(\n    'Mancano i due file: attesi in body.data.file1/base64 e body.data.file2/base64 (o alias image1/image2, source/target)'\n  );\n}\n\n// Crea due binari: file1 e file2\nreturn {\n  json: $json,\n  binary: {\n    file1: { data: f1.base64, mimeType: f1.mime, fileName: f1.fileName },\n    file2: { data: f2.base64, mimeType: f2.mime, fileName: f2.fileName },\n  },\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3344,
+        3392
+      ],
+      "id": "1be4e7b6-64dd-495f-b588-0f1bbf7ad9e7",
+      "name": "Base64 -> IMG3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ingress: campi Input, Tool, Risultati, Section, Save, ReportName\nconst nameRaw = ( $json.ReportName || '' ).trim();\nconst name = nameRaw || 'NOA Report';\nconst slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');\n\nconst entry = {\n  section: $json.Section || 'GEOINT',\n  tool: $json.Tool,\n  input: $json.Input,\n  result: $json.Risultati,\n  time: new Date().toISOString()\n};\n\nreturn [{ json: { entry, name, slug, save: !!$json.Save } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        3536
+      ],
+      "id": "122d4685-ae0c-4dfe-b465-435668e34c84",
+      "name": "Prepare Report Item3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "658ac9d0-d002-4dbe-88cd-047bc3282b0e",
+              "leftValue": "={{ $json.save }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        3536
+      ],
+      "id": "3380e26f-feb7-4e7e-82c4-e1727196692e",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        912,
+        3408
+      ],
+      "id": "4eef5c59-0bd1-4c6a-9afe-6094f7fa5334",
+      "name": "Load report.json3",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        912,
+        3168
+      ],
+      "id": "1227a3f6-b452-43d2-95f2-fa4c54f6a72b",
+      "name": "Keep entry3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// entry viene da Prepare Report Item\nconst entry = $json.entry;\nconst store = Array.isArray($json.store) ? $json.store : [];\n\nconst item = {\n  ts: new Date().toISOString(),\n  section: entry.section,  // es. GEOINT / WEBINT ecc. se lo stai passando\n  tool: entry.tool,\n  input: entry.input,\n  result: entry.result\n};\n\nstore.unshift(item); // più recente in alto\n\nreturn [{\n  json: {\n    name: $json.name,\n    slug: $json.slug,\n    store\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        3184
+      ],
+      "id": "b04d3330-9f77-4d66-a49c-f55ca3b31e80",
+      "name": "Append & Build Store3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// === INPUT atteso ===\n// $json.name  -> es. \"Prova\"\n// $json.slug  -> es. \"prova\"\n// $json.store -> array di entry: [{ section, tool, input, result, time }, ...]\n\n// --------- Util ---------\nconst name = $json.name || 'Report';\nconst slug = $json.slug || 'report';\nconst store = Array.isArray($json.store) ? $json.store : [];\n\n/* Normalizza input per mostrare immagini\n   - se Input è una stringa JSON, la parse\n   - se Input.base64 è senza prefisso, aggiunge \"data:<mime>;base64,\" */\nfor (const e of store) {\n  if (typeof e?.input === 'string') {\n    try { e.input = JSON.parse(e.input); } catch {}\n  }\n  const inp = e?.input;\n  if (inp && typeof inp === 'object' && inp.base64) {\n    if (!/^data:/.test(inp.base64)) {\n      const mime = inp.mime || 'image/png';\n      inp.base64 = `data:${mime};base64,${inp.base64}`;\n    }\n  }\n}\n\nfunction fmtUTC(d = new Date()) {\n  const iso = new Date(d).toISOString();\n  return iso.replace('T', ' ').replace('Z', ' UTC').split('.')[0];\n}\n\n//Palette sezione (coppie gradiente)\nconst palette = {\n  WEBINT: ['#1fcc7a', '#17a95f'],   // verde\n  SOCMINT: ['#ff6b6b', '#e14959'], // rosso\n  IMINT:  ['#ff9a44', '#ff6a00'],  // arancione (aggiornato)\n  GEOINT: ['#2d8cff', '#1b6fe6'],  // blu\n  HUMINT: ['#ffd33d', '#f0b90b'],  // giallo\n  'API KEY': ['#cfd6dd', '#e6ebf0'], // grigio chiaro (aggiornato)\n};\n\n//schiarisci un HEX (0–100)\nfunction lighten(hex, pct = 28) {\n  const m = hex.replace('#', '');\n  const n = m.length === 3 ? m.split('').map(x => x + x).join('') : m;\n  const r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);\n  const mix = c => Math.round(c + (255 - c) * (pct/100));\n  const toHex = v => v.toString(16).padStart(2,'0');\n  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;\n}\n\n//raggruppo per sezione (in ordine di comparsa)\nconst bySection = {};\nconst sectionsOrder = [];\nfor (const e of store) {\n  const sec = e.section || 'ALTRO';\n  if (!bySection[sec]) { bySection[sec] = []; sectionsOrder.push(sec); }\n  if (!e.time) e.time = new Date();\n  bySection[sec].push(e);\n}\n\n// --------- Render helpers ---------\nfunction esc(s){\n  return String(s)\n    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');\n}\n\n// riconosce data URL di immagine\nfunction isImageDataUrl(s){\n  return typeof s === 'string' && /^data:image\\/[a-zA-Z0-9.+-]+;base64,/.test(s);\n}\n\nfunction renderScalar(v){\n  // se è immagine, mostrala centrata e contenuta\n  if (isImageDataUrl(v)) {\n    return `<img src=\"${v}\" alt=\"image\" loading=\"lazy\" style=\"max-width:100%;height:auto;display:block;margin:8px auto;max-height:70vh;object-fit:contain;border-radius:12px;\">`;\n  }\n  return `<span class=\"scalar\">${esc(v)}</span>`;\n}\n\nfunction renderValue(v, depth = 0, labelForArray = '') {\n  if (v === null || v === undefined) return '<span class=\"null\">–</span>';\n  const t = typeof v;\n  if (t === 'string' || t === 'number' || t === 'boolean') return renderScalar(v);\n\n  //Array\n  if (Array.isArray(v)) {\n    if (!v.length) return '<span class=\"empty\">[]</span>';\n    const items = v.map((item, i) => `\n      <details class=\"box\" ${depth < 2 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : ''}[${i+1}]</summary>\n        <div class=\"box-inner\">\n          ${renderValue(item, depth+1)}\n        </div>\n      </details>\n    `).join('');\n    return `\n      <details class=\"box\" ${depth < 1 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : 'Array '}(${v.length})</summary>\n        <div class=\"box-inner\">${items}</div>\n      </details>\n    `;\n  }\n\n  //Oggetto\n  const entries = Object.entries(v);\n  if (!entries.length) return '<span class=\"empty\">{}</span>';\n  const rows = entries.map(([k,val]) => {\n    const valueHTML = Array.isArray(val)\n      ? renderValue(val, depth+1, k)\n      : renderValue(val, depth+1);\n    return `\n      <tr>\n        <td class=\"k\">${esc(k)}</td>\n        <td class=\"v\">${valueHTML}</td>\n      </tr>\n    `;\n  }).join('');\n  return `<table class=\"kv nest\">${rows}</table>`;\n}\n\nfunction chipIndexHTML(sec) {\n  const colors = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  return `<a class=\"chip\" href=\"#sec-${esc(sec)}\" style=\"--c1:${colors[0]};--c2:${colors[1]}\">${esc(sec)}</a>`;\n}\n\nfunction sectionHTML(sec, entries, theme='dark') {\n  const [c1, c2] = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  const c1soft = lighten(c1, 28), c2soft = lighten(c2, 28);\n  return `\n<section class=\"section\" id=\"sec-${esc(sec)}\">\n  <h2 class=\"section-title\" style=\"--c1:${c1};--c2:${c2}\"><span class=\"dot\"></span>${esc(sec)}</h2>\n  ${entries.map(e => `\n    <article class=\"card\">\n      <div class=\"row head\">\n        <div class=\"k\">Tool</div>\n        <div class=\"v tool\"><span class=\"pill\" style=\"--p1:${c1soft};--p2:${c2soft}\">${esc(e.tool || '—')}</span></div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Date</div>\n        <div class=\"v\">${e.time ? renderScalar(fmtUTC(e.time)) : '<span class=\"muted\">—</span>'}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Input</div>\n        <div class=\"v\">${renderValue(e.input)}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Risultato</div>\n        <div class=\"v\">${renderValue(e.result)}</div>\n      </div>\n    </article>\n  `).join('')}\n</section>`;\n}\n\n// --------- HTML builder ---------\nfunction buildHTML(theme='dark') {\n  const utcStamp = fmtUTC();\n  const embedded = JSON.stringify({ name, slug, store }).replace(/</g,'\\\\u003c');\n  return `<!doctype html>\n<html lang=\"it\" class=\"t-${theme}\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(name)} — Report</title>\n<style>\n  /* ====== Theme tokens ====== */\n  :root{\n    --bg:#0b0b0d; --panel:#141417; --text:#fff; --muted:#9aa1ac; --key:#a3a8b3;\n    --chip-bg:rgba(255,255,255,.06); --chip-brd:rgba(255,255,255,.16);\n    --zebra:rgba(255,255,255,.04); --accent:#2d8cff;\n    --shadow:0 10px 30px rgba(0,0,0,.35);\n    --btn-bg:#1c1e22; --btn-brd:#2a2d32; --btn-t:#fff;\n    --box-bg:#101114; --box-brd:#272a30;\n  }\n  .t-light{\n    --bg:#f6f8fb; --panel:#ffffff; --text:#12161e; --muted:#5a6577; --key:#6a7380;\n    --chip-bg:rgba(0,0,0,.04); --chip-brd:rgba(0,0,0,.10);\n    --zebra:rgba(0,0,0,.035); --accent:#1060ff;\n    --shadow:0 8px 24px rgba(0,0,0,.08);\n    --btn-bg:#eef1f6; --btn-brd:#dfe5ee; --btn-t:#101318;\n    --box-bg:#f8fafc; --box-brd:#e7ecf2;\n  }\n  html,body{background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;}\n  .wrap{max-width:1100px;margin:28px auto;padding:0 16px;}\n  .title-card{display:grid; place-items:center; margin:18px 0 14px;}\n  .title-badge{min-width:280px; max-width:520px; background:var(--panel); border:1px solid var(--chip-brd); border-radius:16px; padding:18px 24px; text-align:center; box-shadow:var(--shadow)}\n  .title-badge h1{margin:0 0 6px 0;font-size:28px}\n  .subtitle{color:var(--muted);font-size:14px}\n  .bar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}\n  .btns{display:flex;gap:8px}\n  .btn{background:var(--btn-bg);border:1px solid var(--btn-brd);color:var(--btn-t);padding:8px 12px;border-radius:10px;cursor:pointer;text-decoration:none}\n  .btn:hover{filter:brightness(1.05)}\n  .index{background:var(--panel);border:1px solid var(--chip-brd);padding:14px;border-radius:14px;display:flex;flex-wrap:wrap;gap:10px;box-shadow:var(--shadow)}\n  .chip{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;color:#fff;text-decoration:none;border:1px solid var(--chip-brd); background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2));}\n  .t-light .chip{color:#111}\n  .section{margin:26px 0; break-inside:avoid}\n  .section-title{font-size:20px;margin:0 0 12px;display:flex;align-items:center;gap:10px}\n  .section-title .dot{width:18px;height:18px;border-radius:50%; background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2)); box-shadow:0 6px 18px rgba(0,0,0,.25)}\n  .card{background:var(--panel);border:1px solid var(--chip-brd);border-radius:14px;padding:14px;margin:12px 0;box-shadow:var(--shadow); break-inside:avoid}\n  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;padding:10px;border-radius:10px}\n  .row:nth-child(even){background:var(--zebra)}\n  .row .k{color:var(--key)}\n  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--p1),var(--p2));font-weight:600}\n  table.kv{width:100%;border-collapse:collapse; font-size:12px}\n  table.kv tr>td{vertical-align:top;padding:8px 10px;border-top:1px solid var(--chip-brd)}\n  table.kv tr:first-child>td{border-top:none}\n  table.kv td.k{width:80px !important}\n  table.kv td.v{min-width:0}\n  .scalar{white-space:normal; overflow-wrap:anywhere; word-break:normal}\n  .empty,.null,.muted{color:var(--muted)}\n  details.box{background:var(--box-bg); border:1px solid var(--box-brd); border-radius:12px; margin:8px 0}\n  details.box > summary{list-style:none; cursor:pointer; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; user-select:none; color:var(--text)}\n  details.box > summary::-webkit-details-marker{display:none}\n  .caret{display:inline-block; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--muted); transition:transform .15s ease}\n  details[open] > summary .caret{transform:rotate(180deg)}\n  .box-inner{padding:6px 8px 10px}\n  .titlepage{display:none}\n  @media print{\n    .no-print{display:none !important}\n    .wrap{max-width:100%}\n    .section-title .dot{display:none}\n    .bar{display:none}\n    .titlepage{display:grid; place-items:center; height:100vh}\n    .title-badge{box-shadow:none}\n    h2.section-title{break-after:avoid}\n    .card{break-inside:avoid}\n  }\n</style>\n</head>\n<body>\n  <div class=\"wrap\">\n    <div class=\"title-card no-print\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </div>\n    <div class=\"bar no-print\">\n      <div class=\"subtitle\">Indice</div>\n      <div class=\"btns\">\n        <a class=\"btn\" href=\"http://localhost:5679/noa/pdf?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download PDF</a>\n        <a class=\"btn\" href=\"http://localhost:5679/noa/docx?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download DOCX</a>\n        <button class=\"btn\" onclick=\"window.print()\">Stampa</button>\n      </div>\n    </div>\n    <nav class=\"index no-print\">\n      ${sectionsOrder.map(sec => chipIndexHTML(sec)).join('')}\n    </nav>\n    <section class=\"titlepage\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </section>\n    ${sectionsOrder.map(sec => sectionHTML(sec, bySection[sec], theme)).join('')}\n  </div>\n  <script id=\"noaStore\" type=\"application/json\">${embedded}</script>\n  <script>\n    (function(){\n      const openBefore = new WeakMap();\n      function openAll(){\n        document.querySelectorAll('details').forEach(d => {\n          openBefore.set(d, d.open);\n          d.open = true;\n        });\n      }\n      function restore(){\n        document.querySelectorAll('details').forEach(d => {\n          const was = openBefore.get(d);\n          if (was === false) d.open = false;\n        });\n      }\n      window.addEventListener('beforeprint', openAll);\n      window.addEventListener('afterprint', restore);\n    })();\n  </script>\n</body>\n</html>`;\n}\n\n// Output\nconst html_dark  = buildHTML('dark');\nconst html_light = buildHTML('light');\nreturn [{ json: { name, slug, store, html_dark, html_light } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2464,
+        3184
+      ],
+      "id": "02c9c811-21a6-49e9-9b64-c7f9a85028eb",
+      "name": "Render HTML3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a5e2846-281c-4719-a7dd-4445273cc375",
+              "leftValue": "={{$binary.data !== undefined}}",
+              "rightValue": "={{$binary.data}})",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1104,
+        3408
+      ],
+      "id": "2d05df6a-e5a5-4b39-9fcd-2729e92e50a1",
+      "name": "If17"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "=html",
+        "options": {
+          "encoding": "utf8"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        3312
+      ],
+      "id": "38e7aae1-ee81-488d-b40f-4fd2a1c6a937",
+      "name": "Extract from File3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf5f1cf9-6e08-43be-bfa9-d3bb432551b2",
+              "name": "store",
+              "value": "={{[]}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1312,
+        3504
+      ],
+      "id": "a3933e23-ae9b-43c1-8006-e16183020c7a",
+      "name": "Edit Fields10"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1616,
+        3424
+      ],
+      "id": "a748fb98-56d1-4e6b-8faf-10336718d2b0",
+      "name": "MergeStore3"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1888,
+        3184
+      ],
+      "id": "99af765f-b1e6-4b6f-91fb-2d8d2831b963",
+      "name": "MergeFinale3"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3168,
+        2880
+      ],
+      "id": "1d0d9438-4485-4ce4-8919-15ae2c510cf0",
+      "name": "Read/Write Files from Disk3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2480,
+        2864
+      ],
+      "id": "74b734ad-c104-4d65-94f9-2d07bbc9dbbe",
+      "name": "Name3",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2960,
+        2880
+      ],
+      "id": "d1a56e84-63d6-4ded-9473-981fdc089cc1",
+      "name": "Merge58"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_dark.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3184,
+        3488
+      ],
+      "id": "7f333505-12f7-489d-838b-55256051124b",
+      "name": "Read/Write Files from Disk17"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2960,
+        3488
+      ],
+      "id": "e40c52a6-842a-4626-b71f-1b32b803d354",
+      "name": "Merge59"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2464,
+        3504
+      ],
+      "id": "161fcf43-d4a8-4e08-a780-bdc180abace9",
+      "name": "Name31",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "={{ $json.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b55c0442-db9d-4cab-981a-996c91101408"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2256,
+        3184
+      ],
+      "id": "5b34d6c5-5b16-4bef-9084-ecf59143c619",
+      "name": "Switch11"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $json.html || '';\nconst m = html.match(/<script\\s+id=\"noaStore\"\\s+type=\"application\\/json\">\\s*([\\s\\S]*?)\\s*<\\/script>/i);\nlet prev = { name: $json.name, slug: $json.slug, store: [] };\nif (m) {\n  try { prev = JSON.parse(m[1]); } catch (e) {}\n}\nreturn [{ json: prev }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1456,
+        3312
+      ],
+      "id": "b384ed64-e2f3-4845-b93a-aee73c82a804",
+      "name": "ParseStore3"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "=html_light",
+        "options": {
+          "fileName": "report_light.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2736,
+        3088
+      ],
+      "id": "09f9e461-9a37-468c-9280-9e1f66a5ca1b",
+      "name": "Convert Light3"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html_dark",
+        "options": {
+          "fileName": "report_dark.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2736,
+        3312
+      ],
+      "id": "1849c2a3-955b-45ac-8ded-8c61dc6ec281",
+      "name": "Convert Dark3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ingress: campi Input, Tool, Risultati, Section, Save, ReportName\nconst nameRaw = ( $json.ReportName || '' ).trim();\nconst name = nameRaw || 'NOA Report';\nconst slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');\n\nconst entry = {\n  section: $json.Section || 'GEOINT',\n  tool: $json.Tool,\n  input: $json.Input,\n  result: $json.Risultati,\n  time: new Date().toISOString()\n};\n\nreturn [{ json: { entry, name, slug, save: !!$json.Save } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        4400
+      ],
+      "id": "410b5d3e-fd43-4e44-9d9b-412959535b77",
+      "name": "Prepare Report Item4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "658ac9d0-d002-4dbe-88cd-047bc3282b0e",
+              "leftValue": "={{ $json.save }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        4400
+      ],
+      "id": "ecfc745b-7765-413e-9f97-d2236f6406e8",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        928,
+        4272
+      ],
+      "id": "87cc4acb-a672-42ff-84fa-ea51cdf70784",
+      "name": "Load report.json4",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        928,
+        4032
+      ],
+      "id": "7f79f0a2-081d-4a5b-892d-e94f922ef30f",
+      "name": "Keep entry4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// entry viene da Prepare Report Item\nconst entry = $json.entry;\nconst store = Array.isArray($json.store) ? $json.store : [];\n\nconst item = {\n  ts: new Date().toISOString(),\n  section: entry.section,  // es. GEOINT / WEBINT ecc. se lo stai passando\n  tool: entry.tool,\n  input: entry.input,\n  result: entry.result\n};\n\nstore.unshift(item); // più recente in alto\n\nreturn [{\n  json: {\n    name: $json.name,\n    slug: $json.slug,\n    store\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2096,
+        4048
+      ],
+      "id": "25928f0e-654b-490e-8600-bbee69b88c9b",
+      "name": "Append & Build Store4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// === INPUT atteso ===\n// $json.name  -> es. \"Prova\"\n// $json.slug  -> es. \"prova\"\n// $json.store -> array di entry: [{ section, tool, input, result, time }, ...]\n\n// --------- Util ---------\nconst name = $json.name || 'Report';\nconst slug = $json.slug || 'report';\nconst store = Array.isArray($json.store) ? $json.store : [];\n\n/* Normalizza input per mostrare immagini\n   - se Input è una stringa JSON, la parse\n   - se Input.base64 è senza prefisso, aggiunge \"data:<mime>;base64,\" */\nfor (const e of store) {\n  if (typeof e?.input === 'string') {\n    try { e.input = JSON.parse(e.input); } catch {}\n  }\n  const inp = e?.input;\n  if (inp && typeof inp === 'object' && inp.base64) {\n    if (!/^data:/.test(inp.base64)) {\n      const mime = inp.mime || 'image/png';\n      inp.base64 = `data:${mime};base64,${inp.base64}`;\n    }\n  }\n}\n\nfunction fmtUTC(d = new Date()) {\n  const iso = new Date(d).toISOString();\n  return iso.replace('T', ' ').replace('Z', ' UTC').split('.')[0];\n}\n\n//Palette sezione (coppie gradiente)\nconst palette = {\n  WEBINT: ['#1fcc7a', '#17a95f'],   // verde\n  SOCMINT: ['#ff6b6b', '#e14959'], // rosso\n  IMINT:  ['#ff9a44', '#ff6a00'],  // arancione (aggiornato)\n  GEOINT: ['#2d8cff', '#1b6fe6'],  // blu\n  HUMINT: ['#ffd33d', '#f0b90b'],  // giallo\n  'API KEY': ['#cfd6dd', '#e6ebf0'], // grigio chiaro (aggiornato)\n};\n\n//schiarisci un HEX (0–100)\nfunction lighten(hex, pct = 28) {\n  const m = hex.replace('#', '');\n  const n = m.length === 3 ? m.split('').map(x => x + x).join('') : m;\n  const r = parseInt(n.slice(0,2),16), g = parseInt(n.slice(2,4),16), b = parseInt(n.slice(4,6),16);\n  const mix = c => Math.round(c + (255 - c) * (pct/100));\n  const toHex = v => v.toString(16).padStart(2,'0');\n  return `#${toHex(mix(r))}${toHex(mix(g))}${toHex(mix(b))}`;\n}\n\n//raggruppo per sezione (in ordine di comparsa)\nconst bySection = {};\nconst sectionsOrder = [];\nfor (const e of store) {\n  const sec = e.section || 'ALTRO';\n  if (!bySection[sec]) { bySection[sec] = []; sectionsOrder.push(sec); }\n  if (!e.time) e.time = new Date();\n  bySection[sec].push(e);\n}\n\n// --------- Render helpers ---------\nfunction esc(s){\n  return String(s)\n    .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');\n}\n\n// riconosce data URL di immagine\nfunction isImageDataUrl(s){\n  return typeof s === 'string' && /^data:image\\/[a-zA-Z0-9.+-]+;base64,/.test(s);\n}\n\nfunction renderScalar(v){\n  // se è immagine, mostrala centrata e contenuta\n  if (isImageDataUrl(v)) {\n    return `<img src=\"${v}\" alt=\"image\" loading=\"lazy\" style=\"max-width:100%;height:auto;display:block;margin:8px auto;max-height:70vh;object-fit:contain;border-radius:12px;\">`;\n  }\n  return `<span class=\"scalar\">${esc(v)}</span>`;\n}\n\nfunction renderValue(v, depth = 0, labelForArray = '') {\n  if (v === null || v === undefined) return '<span class=\"null\">–</span>';\n  const t = typeof v;\n  if (t === 'string' || t === 'number' || t === 'boolean') return renderScalar(v);\n\n  //Array\n  if (Array.isArray(v)) {\n    if (!v.length) return '<span class=\"empty\">[]</span>';\n    const items = v.map((item, i) => `\n      <details class=\"box\" ${depth < 2 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : ''}[${i+1}]</summary>\n        <div class=\"box-inner\">\n          ${renderValue(item, depth+1)}\n        </div>\n      </details>\n    `).join('');\n    return `\n      <details class=\"box\" ${depth < 1 ? 'open' : ''}>\n        <summary><span class=\"caret\"></span>${labelForArray ? esc(labelForArray) + ' ' : 'Array '}(${v.length})</summary>\n        <div class=\"box-inner\">${items}</div>\n      </details>\n    `;\n  }\n\n  //Oggetto\n  const entries = Object.entries(v);\n  if (!entries.length) return '<span class=\"empty\">{}</span>';\n  const rows = entries.map(([k,val]) => {\n    const valueHTML = Array.isArray(val)\n      ? renderValue(val, depth+1, k)\n      : renderValue(val, depth+1);\n    return `\n      <tr>\n        <td class=\"k\">${esc(k)}</td>\n        <td class=\"v\">${valueHTML}</td>\n      </tr>\n    `;\n  }).join('');\n  return `<table class=\"kv nest\">${rows}</table>`;\n}\n\nfunction chipIndexHTML(sec) {\n  const colors = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  return `<a class=\"chip\" href=\"#sec-${esc(sec)}\" style=\"--c1:${colors[0]};--c2:${colors[1]}\">${esc(sec)}</a>`;\n}\n\nfunction sectionHTML(sec, entries, theme='dark') {\n  const [c1, c2] = palette[sec] || ['#2f2f2f', '#1a1a1a'];\n  const c1soft = lighten(c1, 28), c2soft = lighten(c2, 28);\n  return `\n<section class=\"section\" id=\"sec-${esc(sec)}\">\n  <h2 class=\"section-title\" style=\"--c1:${c1};--c2:${c2}\"><span class=\"dot\"></span>${esc(sec)}</h2>\n  ${entries.map(e => `\n    <article class=\"card\">\n      <div class=\"row head\">\n        <div class=\"k\">Tool</div>\n        <div class=\"v tool\"><span class=\"pill\" style=\"--p1:${c1soft};--p2:${c2soft}\">${esc(e.tool || '—')}</span></div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Date</div>\n        <div class=\"v\">${e.time ? renderScalar(fmtUTC(e.time)) : '<span class=\"muted\">—</span>'}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Input</div>\n        <div class=\"v\">${renderValue(e.input)}</div>\n      </div>\n      <div class=\"row\">\n        <div class=\"k\">Risultato</div>\n        <div class=\"v\">${renderValue(e.result)}</div>\n      </div>\n    </article>\n  `).join('')}\n</section>`;\n}\n\n// --------- HTML builder ---------\nfunction buildHTML(theme='dark') {\n  const utcStamp = fmtUTC();\n  const embedded = JSON.stringify({ name, slug, store }).replace(/</g,'\\\\u003c');\n  return `<!doctype html>\n<html lang=\"it\" class=\"t-${theme}\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>${esc(name)} — Report</title>\n<style>\n  /* ====== Theme tokens ====== */\n  :root{\n    --bg:#0b0b0d; --panel:#141417; --text:#fff; --muted:#9aa1ac; --key:#a3a8b3;\n    --chip-bg:rgba(255,255,255,.06); --chip-brd:rgba(255,255,255,.16);\n    --zebra:rgba(255,255,255,.04); --accent:#2d8cff;\n    --shadow:0 10px 30px rgba(0,0,0,.35);\n    --btn-bg:#1c1e22; --btn-brd:#2a2d32; --btn-t:#fff;\n    --box-bg:#101114; --box-brd:#272a30;\n  }\n  .t-light{\n    --bg:#f6f8fb; --panel:#ffffff; --text:#12161e; --muted:#5a6577; --key:#6a7380;\n    --chip-bg:rgba(0,0,0,.04); --chip-brd:rgba(0,0,0,.10);\n    --zebra:rgba(0,0,0,.035); --accent:#1060ff;\n    --shadow:0 8px 24px rgba(0,0,0,.08);\n    --btn-bg:#eef1f6; --btn-brd:#dfe5ee; --btn-t:#101318;\n    --box-bg:#f8fafc; --box-brd:#e7ecf2;\n  }\n  html,body{background:var(--bg);color:var(--text);font:15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;}\n  .wrap{max-width:1100px;margin:28px auto;padding:0 16px;}\n  .title-card{display:grid; place-items:center; margin:18px 0 14px;}\n  .title-badge{min-width:280px; max-width:520px; background:var(--panel); border:1px solid var(--chip-brd); border-radius:16px; padding:18px 24px; text-align:center; box-shadow:var(--shadow)}\n  .title-badge h1{margin:0 0 6px 0;font-size:28px}\n  .subtitle{color:var(--muted);font-size:14px}\n  .bar{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}\n  .btns{display:flex;gap:8px}\n  .btn{background:var(--btn-bg);border:1px solid var(--btn-brd);color:var(--btn-t);padding:8px 12px;border-radius:10px;cursor:pointer;text-decoration:none}\n  .btn:hover{filter:brightness(1.05)}\n  .index{background:var(--panel);border:1px solid var(--chip-brd);padding:14px;border-radius:14px;display:flex;flex-wrap:wrap;gap:10px;box-shadow:var(--shadow)}\n  .chip{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;color:#fff;text-decoration:none;border:1px solid var(--chip-brd); background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2));}\n  .t-light .chip{color:#111}\n  .section{margin:26px 0; break-inside:avoid}\n  .section-title{font-size:20px;margin:0 0 12px;display:flex;align-items:center;gap:10px}\n  .section-title .dot{width:18px;height:18px;border-radius:50%; background:radial-gradient(120% 120% at 10% 10%, var(--c1), var(--c2)); box-shadow:0 6px 18px rgba(0,0,0,.25)}\n  .card{background:var(--panel);border:1px solid var(--chip-brd);border-radius:14px;padding:14px;margin:12px 0;box-shadow:var(--shadow); break-inside:avoid}\n  .row{display:grid;grid-template-columns:160px 1fr;gap:12px;padding:10px;border-radius:10px}\n  .row:nth-child(even){background:var(--zebra)}\n  .row .k{color:var(--key)}\n  .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,var(--p1),var(--p2));font-weight:600}\n  table.kv{width:100%;border-collapse:collapse; font-size:12px}\n  table.kv tr>td{vertical-align:top;padding:8px 10px;border-top:1px solid var(--chip-brd)}\n  table.kv tr:first-child>td{border-top:none}\n  table.kv td.k{width:80px !important}\n  table.kv td.v{min-width:0}\n  .scalar{white-space:normal; overflow-wrap:anywhere; word-break:normal}\n  .empty,.null,.muted{color:var(--muted)}\n  details.box{background:var(--box-bg); border:1px solid var(--box-brd); border-radius:12px; margin:8px 0}\n  details.box > summary{list-style:none; cursor:pointer; padding:8px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; user-select:none; color:var(--text)}\n  details.box > summary::-webkit-details-marker{display:none}\n  .caret{display:inline-block; width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--muted); transition:transform .15s ease}\n  details[open] > summary .caret{transform:rotate(180deg)}\n  .box-inner{padding:6px 8px 10px}\n  .titlepage{display:none}\n  @media print{\n    .no-print{display:none !important}\n    .wrap{max-width:100%}\n    .section-title .dot{display:none}\n    .bar{display:none}\n    .titlepage{display:grid; place-items:center; height:100vh}\n    .title-badge{box-shadow:none}\n    h2.section-title{break-after:avoid}\n    .card{break-inside:avoid}\n  }\n</style>\n</head>\n<body>\n  <div class=\"wrap\">\n    <div class=\"title-card no-print\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </div>\n    <div class=\"bar no-print\">\n      <div class=\"subtitle\">Indice</div>\n      <div class=\"btns\">\n        <a class=\"btn\" href=\"http://localhost:5679/noa/pdf?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download PDF</a>\n        <a class=\"btn\" href=\"http://localhost:5679/noa/docx?name=${encodeURIComponent(slug)}&theme=${theme}\" target=\"_blank\" rel=\"noopener\">Download DOCX</a>\n        <button class=\"btn\" onclick=\"window.print()\">Stampa</button>\n      </div>\n    </div>\n    <nav class=\"index no-print\">\n      ${sectionsOrder.map(sec => chipIndexHTML(sec)).join('')}\n    </nav>\n    <section class=\"titlepage\">\n      <div class=\"title-badge\">\n        <h1>${esc(name)}</h1>\n        <div class=\"subtitle\">Report NOA — ${esc(utcStamp)}</div>\n      </div>\n    </section>\n    ${sectionsOrder.map(sec => sectionHTML(sec, bySection[sec], theme)).join('')}\n  </div>\n  <script id=\"noaStore\" type=\"application/json\">${embedded}</script>\n  <script>\n    (function(){\n      const openBefore = new WeakMap();\n      function openAll(){\n        document.querySelectorAll('details').forEach(d => {\n          openBefore.set(d, d.open);\n          d.open = true;\n        });\n      }\n      function restore(){\n        document.querySelectorAll('details').forEach(d => {\n          const was = openBefore.get(d);\n          if (was === false) d.open = false;\n        });\n      }\n      window.addEventListener('beforeprint', openAll);\n      window.addEventListener('afterprint', restore);\n    })();\n  </script>\n</body>\n</html>`;\n}\n\n// Output\nconst html_dark  = buildHTML('dark');\nconst html_light = buildHTML('light');\nreturn [{ json: { name, slug, store, html_dark, html_light } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2480,
+        4048
+      ],
+      "id": "1f8c9ca6-ef59-4ea2-b0ca-f58429140a2b",
+      "name": "Render HTML4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a5e2846-281c-4719-a7dd-4445273cc375",
+              "leftValue": "={{$binary.data !== undefined}}",
+              "rightValue": "={{$binary.data}})",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1120,
+        4272
+      ],
+      "id": "c96c9655-6de5-4df3-bdd1-df7e088d0313",
+      "name": "If18"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "destinationKey": "=html",
+        "options": {
+          "encoding": "utf8"
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        1328,
+        4176
+      ],
+      "id": "b86b1c5c-e43b-40d9-bd89-41403088be33",
+      "name": "Extract from File4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf5f1cf9-6e08-43be-bfa9-d3bb432551b2",
+              "name": "store",
+              "value": "={{[]}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        4368
+      ],
+      "id": "41b55c61-4ec3-4858-8d6e-2265bd6064ea",
+      "name": "Edit Fields11"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1632,
+        4288
+      ],
+      "id": "da4cffb4-a27b-4c29-afb3-39c6f489c0d4",
+      "name": "MergeStore4"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1904,
+        4048
+      ],
+      "id": "4bcd7b3e-3b5f-454d-ac50-fdfd4b68b4d8",
+      "name": "MergeFinale4"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_light.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3184,
+        3744
+      ],
+      "id": "29f801d4-ebb6-4a25-a869-b5a3b12e0c29",
+      "name": "Read/Write Files from Disk4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2496,
+        3728
+      ],
+      "id": "1a1efaa6-2291-4bf2-97a3-e2ae88f841b0",
+      "name": "Name4",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2976,
+        3744
+      ],
+      "id": "a5b8ffea-546f-495b-94f2-52d6f893007b",
+      "name": "Merge60"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/data/reports/{{$json.name}}_dark.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        3200,
+        4352
+      ],
+      "id": "c2af6966-6131-45c9-a77d-8992feac0165",
+      "name": "Read/Write Files from Disk18"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2976,
+        4352
+      ],
+      "id": "8b2db684-3677-4a73-9d81-7373b3f50dfa",
+      "name": "Merge61"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "752a5f49-8da3-4bf8-93c5-608ff0cb2ad9",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2480,
+        4368
+      ],
+      "id": "31832f3c-ba41-4d0d-8d95-622abef1b4cb",
+      "name": "Name32",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.name }}",
+                    "rightValue": "={{ $json.name }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b55c0442-db9d-4cab-981a-996c91101408"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2272,
+        4048
+      ],
+      "id": "56756fa5-6910-4394-acfd-782e5fb5688d",
+      "name": "Switch12"
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = $json.html || '';\nconst m = html.match(/<script\\s+id=\"noaStore\"\\s+type=\"application\\/json\">\\s*([\\s\\S]*?)\\s*<\\/script>/i);\nlet prev = { name: $json.name, slug: $json.slug, store: [] };\nif (m) {\n  try { prev = JSON.parse(m[1]); } catch (e) {}\n}\nreturn [{ json: prev }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        4176
+      ],
+      "id": "4a7820f3-0fac-4dfa-8b30-30b6e6f0a843",
+      "name": "ParseStore4"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "=html_light",
+        "options": {
+          "fileName": "report_light.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2752,
+        3952
+      ],
+      "id": "9e117a77-c320-4225-8fef-44da3df1e980",
+      "name": "Convert Light4"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "html_dark",
+        "options": {
+          "fileName": "report_dark.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2752,
+        4176
+      ],
+      "id": "5bf2f3ac-a9c1-48f2-aa6a-0e052aaa4764",
+      "name": "Convert Dark4"
+    },
+    {
+      "parameters": {
+        "content": "## SUBWORKFLOW \n**NOA - Get API Key** ",
+        "height": 272,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2144,
+        1360
+      ],
+      "typeVersion": 1,
+      "id": "13c43c7a-b19c-4880-ae47-056f722a8e8d",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "IMINT - 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IMINT2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "imagetotext": {
+      "main": [
+        [
+          {
+            "node": "Risultati3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "objectdetection": {
+      "main": [
+        [
+          {
+            "node": "Risultati4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (Face Detection)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA – Get API Key'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Base64 -> IMG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (Image To Text)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA – Get API Key'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Base64 -> IMG1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (Object Detection)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA – Get API Key'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Base64 -> IMG2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "facedetect": {
+      "main": [
+        [
+          {
+            "node": "Risultati2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "imagetotext",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "objectdetection",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "facedetect",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMINT - 1": {
+      "main": [
+        [
+          {
+            "node": "Set provider (Face Detection)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name41",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (Image To Text)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name41",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (Object Detection)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name41",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (RapidApi)29",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name41",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA – Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool2": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati2": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool3": {
+      "main": [
+        [
+          {
+            "node": "Merge7",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati3": {
+      "main": [
+        [
+          {
+            "node": "Merge7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool4": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati4": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool15": {
+      "main": [
+        [
+          {
+            "node": "Merge16",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati15": {
+      "main": [
+        [
+          {
+            "node": "Merge16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge16": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Face detection": {
+      "main": [
+        [
+          {
+            "node": "Risultati15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reverse Image Search1": {
+      "main": [
+        [
+          {
+            "node": "Risultati1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)1": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA – Get API Key'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'NOA – Get API Key'": {
+      "main": [
+        [
+          {
+            "node": "Merge8",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recognito": {
+      "main": [
+        [
+          {
+            "node": "Risultati28",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set provider (RapidApi)29": {
+      "main": [
+        [
+          {
+            "node": "Call 'NOA – Get API Key'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Base64 -> IMG3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Input e Tool28": {
+      "main": [
+        [
+          {
+            "node": "Merge28",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Risultati28": {
+      "main": [
+        [
+          {
+            "node": "Merge28",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Recognito",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool28",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IMINT2": {
+      "main": [
+        [
+          {
+            "node": "Set provider (RapidApi)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name40",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set provider (RapidApi)1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name40",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge8": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Face detection",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool15",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reverse Image Search1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Input e Tool1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name40": {
+      "main": [
+        [
+          {
+            "node": "Merge16",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Prepare Report Item": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keep entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Load report.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load report.json": {
+      "main": [
+        [
+          {
+            "node": "If14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep entry": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append & Build Store": {
+      "main": [
+        [
+          {
+            "node": "Render HTML",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render HTML": {
+      "main": [
+        [
+          {
+            "node": "Convert Light",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert Dark",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If14": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "ParseStore",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "MergeStore",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeStore": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeFinale": {
+      "main": [
+        [
+          {
+            "node": "Append & Build Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name": {
+      "main": [
+        [
+          {
+            "node": "Merge52",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge52": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge53": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name28": {
+      "main": [
+        [
+          {
+            "node": "Merge53",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch8": {
+      "main": [
+        [
+          {
+            "node": "Name",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name28",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ParseStore": {
+      "main": [
+        [
+          {
+            "node": "MergeStore",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Light": {
+      "main": [
+        [
+          {
+            "node": "Merge52",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Convert Dark": {
+      "main": [
+        [
+          {
+            "node": "Merge53",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name41": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge7",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 2
+          },
+          {
+            "node": "Merge28",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Prepare Report Item1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keep entry1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Load report.json1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load report.json1": {
+      "main": [
+        [
+          {
+            "node": "If15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep entry1": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append & Build Store1": {
+      "main": [
+        [
+          {
+            "node": "Render HTML1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render HTML1": {
+      "main": [
+        [
+          {
+            "node": "Convert Light1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert Dark1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If15": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "ParseStore1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields8": {
+      "main": [
+        [
+          {
+            "node": "MergeStore1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeStore1": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeFinale1": {
+      "main": [
+        [
+          {
+            "node": "Append & Build Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name1": {
+      "main": [
+        [
+          {
+            "node": "Merge54",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge54": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge55": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk15",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name29": {
+      "main": [
+        [
+          {
+            "node": "Merge55",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch9": {
+      "main": [
+        [
+          {
+            "node": "Name1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name29",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ParseStore1": {
+      "main": [
+        [
+          {
+            "node": "MergeStore1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Light1": {
+      "main": [
+        [
+          {
+            "node": "Merge54",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Convert Dark1": {
+      "main": [
+        [
+          {
+            "node": "Merge55",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64 -> IMG": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Base64 -> IMG1": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Report Item2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keep entry2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Load report.json2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load report.json2": {
+      "main": [
+        [
+          {
+            "node": "If16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep entry2": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append & Build Store2": {
+      "main": [
+        [
+          {
+            "node": "Render HTML2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render HTML2": {
+      "main": [
+        [
+          {
+            "node": "Convert Light2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert Dark2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If16": {
+      "main": [
+        [
+          {
+            "node": "Extract from File2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File2": {
+      "main": [
+        [
+          {
+            "node": "ParseStore2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields9": {
+      "main": [
+        [
+          {
+            "node": "MergeStore2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeStore2": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeFinale2": {
+      "main": [
+        [
+          {
+            "node": "Append & Build Store2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name2": {
+      "main": [
+        [
+          {
+            "node": "Merge56",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge56": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge57": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name30": {
+      "main": [
+        [
+          {
+            "node": "Merge57",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch10": {
+      "main": [
+        [
+          {
+            "node": "Name2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name30",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ParseStore2": {
+      "main": [
+        [
+          {
+            "node": "MergeStore2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Light2": {
+      "main": [
+        [
+          {
+            "node": "Merge56",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Convert Dark2": {
+      "main": [
+        [
+          {
+            "node": "Merge57",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge7": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64 -> IMG2": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Base64 -> IMG3": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Prepare Report Item3": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keep entry3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Load report.json3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load report.json3": {
+      "main": [
+        [
+          {
+            "node": "If17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep entry3": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append & Build Store3": {
+      "main": [
+        [
+          {
+            "node": "Render HTML3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render HTML3": {
+      "main": [
+        [
+          {
+            "node": "Convert Light3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert Dark3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If17": {
+      "main": [
+        [
+          {
+            "node": "Extract from File3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File3": {
+      "main": [
+        [
+          {
+            "node": "ParseStore3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields10": {
+      "main": [
+        [
+          {
+            "node": "MergeStore3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeStore3": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeFinale3": {
+      "main": [
+        [
+          {
+            "node": "Append & Build Store3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name3": {
+      "main": [
+        [
+          {
+            "node": "Merge58",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge58": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge59": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk17",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name31": {
+      "main": [
+        [
+          {
+            "node": "Merge59",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch11": {
+      "main": [
+        [
+          {
+            "node": "Name3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name31",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ParseStore3": {
+      "main": [
+        [
+          {
+            "node": "MergeStore3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Light3": {
+      "main": [
+        [
+          {
+            "node": "Merge58",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Convert Dark3": {
+      "main": [
+        [
+          {
+            "node": "Merge59",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Report Item4": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Keep entry4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Load report.json4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load report.json4": {
+      "main": [
+        [
+          {
+            "node": "If18",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep entry4": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append & Build Store4": {
+      "main": [
+        [
+          {
+            "node": "Render HTML4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Switch12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render HTML4": {
+      "main": [
+        [
+          {
+            "node": "Convert Light4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert Dark4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If18": {
+      "main": [
+        [
+          {
+            "node": "Extract from File4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File4": {
+      "main": [
+        [
+          {
+            "node": "ParseStore4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields11": {
+      "main": [
+        [
+          {
+            "node": "MergeStore4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeStore4": {
+      "main": [
+        [
+          {
+            "node": "MergeFinale4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "MergeFinale4": {
+      "main": [
+        [
+          {
+            "node": "Append & Build Store4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name4": {
+      "main": [
+        [
+          {
+            "node": "Merge60",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge60": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge61": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk18",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name32": {
+      "main": [
+        [
+          {
+            "node": "Merge61",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch12": {
+      "main": [
+        [
+          {
+            "node": "Name4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Name32",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ParseStore4": {
+      "main": [
+        [
+          {
+            "node": "MergeStore4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert Light4": {
+      "main": [
+        [
+          {
+            "node": "Merge60",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Convert Dark4": {
+      "main": [
+        [
+          {
+            "node": "Merge61",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge28": {
+      "main": [
+        [
+          {
+            "node": "Prepare Report Item4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "45850067-8f2e-4618-b030-88f10d8ad362",
+  "meta": {
+    "instanceId": "6bd339f911a3c4d63129180a1951c103a2f0d148fb90c68d610c30dfde901589"
+  },
+  "id": "sKmL03RRvpZlRVGO",
+  "tags": []
+}
