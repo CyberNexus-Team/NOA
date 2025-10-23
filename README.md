@@ -37,9 +37,10 @@ The system is designed to run seamlessly on Docker, ensuring a simple, free, and
 
 ---
 
-<!-- UN'IMMAGINE O UNA GIF VALE PIÙ DI MILLE PAROLE. Crea uno screenshot dell'interfaccia web e caricalo qui. -->
+### NOA in action
+
 <p align="center">
-  <img src="https://github.com/CyberNexus-Team/NOA/blob/main/NOA-photo/GIF.png" alt="NOA in action"/>
+  <img src="https://github.com/CyberNexus-Team/NOA/blob/main/NOA-photo/Gif.gif?raw=true" alt="NOA in action"/>
 </p>
 
 ---
@@ -49,7 +50,7 @@ The system is designed to run seamlessly on Docker, ensuring a simple, free, and
 Follow these steps to get your own instance of NOA up and running.
 
 #### Prerequisites
-*   [Docker Desktop]([https://www.docker.com/get-started](https://www.docker.com/products/docker-desktop/)) and [VScode](https://code.visualstudio.com/download) installed on your system.
+*   [Docker Desktop](https://www.docker.com/products/docker-desktop/) and [VScode](https://code.visualstudio.com/download) installed on your system.
 *   API keys from the services you intend to use.
 
 #### Installation
@@ -63,9 +64,9 @@ Follow these steps to get your own instance of NOA up and running.
     This command will start both the n8n container and the local web interface.
 
 3.  **Set up n8n:**
-    *   Open your browser and navigate.
+    *   Open your browser and navigate to `http://localhost:5678'.
     *   Set up your n8n owner account.
-    *   Import the provided workflow file into n8n.
+    *   Import all workflow file into n8n.
 
 4.  **Configure API Keys & Credentials:**
     *   To get your API keys, we've compiled a list of direct registration links for all supported services. You can find it in our **[API_KEYS.md](API_KEYS.md)** document.
@@ -75,7 +76,7 @@ Follow these steps to get your own instance of NOA up and running.
 
 ### Usage
 
-1.  Open the local web interface by navigating to `http://localhost:[PORTA_INTERFACCIA_WEB]`.
+1.  Open the local interface by double-clicking on any HTML file in the CyberNexus_NOA folder.
 2.  Select category, tool and enter your search query.
 3.  Submit the form. The interface will trigger the n8n workflow.
 4.  Wait for the process to complete.
