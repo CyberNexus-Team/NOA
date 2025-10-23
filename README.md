@@ -64,6 +64,7 @@ Follow these steps to get your own instance of NOA up and running.
     This command will start both the n8n container and the local web interface.
 
 3.  **Set up n8n:**
+    *   See the installation guide document [Configuration_N8N](https://github.com/CyberNexus-Team/NOA/blob/main/Configuration_N8N.pdf)
     *   Open your browser and navigate to `http://localhost:5678'.
     *   Set up your n8n owner account.
     *   Import all workflow file into n8n.
