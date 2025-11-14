@@ -1,5 +1,5 @@
 {
-  "name": "NOA – DOCX",
+  "name": "docx",
   "nodes": [
     {
       "parameters": {
@@ -10,11 +10,11 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        1104,
-        736
+        0,
+        0
       ],
       "name": "Webhook (DOCX)",
-      "id": "f8d902f9-18ba-4a25-b917-92544aa4a6d3",
+      "id": "4b586600-4639-478e-a461-04c58ebd0fac",
       "webhookId": "f49417e0-2d62-4f92-b4bf-a4830c90473e"
     },
     {
@@ -25,25 +25,16 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        1536,
-        736
+        432,
+        0
       ],
       "name": "Read HTML (disk)",
-      "id": "3d958348-f8bc-4839-8f45-5a768bd35745"
+      "id": "7cff86e9-ef11-473d-bbc2-60e2afe60419"
     },
     {
       "parameters": {
         "method": "POST",
         "url": "http://html2docx:5005/convert",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            }
-          ]
-        },
         "sendBody": true,
         "contentType": "multipart-form-data",
         "bodyParameters": {
@@ -55,7 +46,7 @@
             },
             {
               "name": "filename",
-              "value": "={{$binary.data.fileName || 'report_light.html'}}"
+              "value": "={{$binary.data.fileName || 'report.html'}}"
             }
           ]
         },
@@ -72,24 +63,24 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1744,
-        736
+        640,
+        0
       ],
       "name": "HTML → DOCX",
-      "id": "29934c96-a53b-4c53-97da-e19e78201645"
+      "id": "3b559306-1a6b-46c5-95ed-e9833765a92e"
     },
     {
       "parameters": {
-        "jsCode": "const raw = $json.query?.name ?? 'report';\nconst name = String(raw).trim();\nconst safe = name.replace(/[^a-z0-9-_]/gi, '-').replace(/-+/g, '-');\nconst theme = 'light';\nconst file = `/data/reports/${safe}_${theme}.html`;\nconst filename = `${safe}.docx`;\nreturn [{ json: { name: safe, file, filename } }];"
+        "jsCode": "// Normalizza il nome del file e imposta i percorsi per HTML e DOCX\n\nconst raw = $json.query?.name ?? 'report';\nconst name = String(raw).trim();\n\n// Rimuove caratteri non validi dal nome\nconst safe = name.replace(/[^a-z0-9-_]/gi, '-').replace(/-+/g, '-');\n\n// Tema o variante (opzionale)\nconst theme = 'light';\n\n// Percorso completo del file HTML da leggere e convertire\n// Gotenberg richiede estensione .html per riconoscere correttamente il formato\nconst file = `/data/reports/${safe}_${theme}.html`;\n\n// Nome finale del documento esportato\nconst filename = `${safe}.docx`;\n\n// Restituisce i valori per i nodi successivi\nreturn [\n  {\n    json: {\n      name: safe,\n      file,\n      filename\n    }\n  }\n];\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1328,
-        736
+        224,
+        0
       ],
       "name": "Normalizza Input (DOCX)1",
-      "id": "be96bc64-f9a4-4832-9d32-9e5f96cf1d21"
+      "id": "4108564d-0b7f-4ff9-9db6-6f899bb5b69d"
     },
     {
       "parameters": {
@@ -114,11 +105,11 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.4,
       "position": [
-        1952,
-        736
+        848,
+        0
       ],
       "name": "Respond DOCX",
-      "id": "898c0c14-5921-4d2d-8da5-65969fddde23"
+      "id": "e320bc26-96aa-4bb5-a290-b4787617f511"
     }
   ],
   "pinData": {},
@@ -172,10 +163,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "356beea5-36ad-4743-962e-4b8f5378727f",
+  "versionId": "3e16ed2e-5d35-4637-a442-7ab805eef575",
   "meta": {
-    "instanceId": "6bd339f911a3c4d63129180a1951c103a2f0d148fb90c68d610c30dfde901589"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aa53069b6daa51f0a9ff74c5ab6032bb586df5af65ac67904fe67a59c0ed63a1"
   },
-  "id": "Bi4aJElBVwHRIbRI",
+  "id": "oBlgrpPE01OS9eV9",
   "tags": []
 }
